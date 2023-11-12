@@ -1,0 +1,27 @@
+.titulos-filtros {
+    color: #82380A;
+}
+
+.reclamos {
+    margin-top: 2vw;
+    margin-bottom: 7vw;
+    margin-right: 7vw;
+    margin-left: 7vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-drop {
+    background-color: #F7F3F0;
+}
+
+.button-new-reclamo {
+    height: fit-content;
+    border: 2px solid #B04C0E !important;
+    transition: all 0.2s ease !important;
+}
+
+.button-new-reclamo:hover {
+    font-weight: bold;
+    padding-inline: 1.5%;
+}

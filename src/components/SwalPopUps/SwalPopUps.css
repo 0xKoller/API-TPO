@@ -1,0 +1,14 @@
+.select{
+    display: flex;
+    margin: auto;
+    height: fit-content !important;
+}
+
+.selectPopup{
+    height: auto !important;
+}
+
+.select::selection{
+    outline: none !important;
+    border-color: transparent;
+}

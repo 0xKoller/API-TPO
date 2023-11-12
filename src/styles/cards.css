@@ -1,0 +1,29 @@
+
+.card-father-container{
+    width: 80vw;
+    margin: 0 auto;
+    margin-bottom: 2vw;
+    font-weight: 600;
+}
+.card-father-container * {
+    background-color: white;
+}
+.card-content{
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid rgb(202, 202, 202);
+    padding: 3%;
+    border-radius: 15px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+.card-main-button{
+    width: 35%;   
+}
+
+.card-cancel-button{
+    background-color: gray !important;
+    border: 1px solid lightgray !important;
+}

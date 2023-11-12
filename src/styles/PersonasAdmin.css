@@ -1,0 +1,24 @@
+.personas {
+    margin: 0 7vw;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.agregar-persona {
+    background-color: #FC6D14;
+    padding-inline: 2vw !important;
+}
+
+.agregar-persona:hover {
+    padding-inline: 3vw !important;
+    font-weight: bold;
+}
+
+.buscador {
+    border-radius: 5px;
+    background-color: #F7F3F0;
+    font-size: 0.90em;
+    padding: 5px;
+    width: 100% !important;
+}

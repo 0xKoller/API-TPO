@@ -1,0 +1,19 @@
+.badgeError {
+    text-align: center;
+    background-color: rgb(253, 226, 226);
+    border: solid 1px;
+    border-color: rgb(231, 0, 0);
+    border-radius: 0.8rem;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(116, 0, 0);
+}
+
+.img-center {
+    /* transform: translateY(10%); */
+    height: 5%;
+    width: 5%;
+    margin-right: 10px;
+}

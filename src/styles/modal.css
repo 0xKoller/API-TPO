@@ -1,0 +1,74 @@
+.model {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+      
+.model-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+    width: 60vw;
+    height: 60vh;
+}
+
+.modal-body {
+}
+
+.persona-reclamo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.estado-reclamo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.edificio-reclamo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.unidad-reclamo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.ubicacion-reclamo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.descripcion-reclamo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 2vh;
+}
+
+.imagenes-reclamo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 2vh;
+}
+
+.imagenes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+

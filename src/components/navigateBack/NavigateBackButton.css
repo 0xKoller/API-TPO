@@ -1,0 +1,14 @@
+.btn-navigate-back {
+    position: absolute;
+    top: 3vh;
+    left: 0;
+    height: fit-content;
+    border: 2px solid #B04C0E !important;
+    transition: all 0.3s ease !important;
+    margin-left: 5vh;
+}
+
+.btn-navigate-back:hover{
+    font-weight: bold;
+    padding-inline: 1.5%;
+}

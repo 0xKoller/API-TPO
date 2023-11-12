@@ -1,0 +1,75 @@
+.principal {
+    background-color: #F7F3F0;
+    height: fit-content;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100px;
+    align-items: center;
+}
+
+.filtros {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2vw;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.titulo {
+    margin: 0vw 3vw 0 3vw;
+    color: #82380A;
+}
+
+.personas {
+    margin: 0 7vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.filtros {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buscador {
+    border-radius: 5px;
+    background-color: #F7F3F0;
+    font-size: 0.90em;
+    padding: 5px;
+    width: 100% !important;
+}
+
+.subtitulo {
+    margin-top: 1em !important;
+}
+
+.loading {
+    margin-top: 35vh;
+    margin-bottom: 35vh;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    margin: 2vh;
+}
+
+.loading h3 {
+    margin: 1vh;
+    text-align: center;
+}
+
+.center-screen{
+    margin: auto;
+}
+
+.mensaje-error{
+    margin: auto;
+    margin-top: 3em;
+}

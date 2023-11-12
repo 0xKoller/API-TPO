@@ -1,0 +1,65 @@
+.login {
+    width: 40%;
+    height: fit-content;
+    padding: 1%;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    margin-top: 10vw;
+    border: 0.5px solid rgb(202, 202, 202);
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    background-color: white;
+}
+
+h1,
+label {
+    color: #82380A;
+}
+
+@media (max-width: 600px) {
+    .login {
+        width: 70%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .login {
+        width: 30%;
+    }
+}
+
+.login-box {
+    width: 90%;
+    margin: auto;
+    height: fit-content;
+    margin: 0 auto;
+    text-align: start;
+}
+
+.linkRecupero {
+    color: #FC6D14;
+    position: relative;
+    margin-bottom: 0px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.btn-ingresar {
+    margin-top: 1em;
+    background-color: #FC6D14 !important;
+    border-color: #B04C0E !important;
+    transition: all 0.3s ease !important;
+    border-width: 2px !important;
+    opacity: 1;
+    font-weight: bold;
+    padding-inline: 3em !important;
+}
+
+.btn-ingresar:hover {
+    opacity: 0.8 !important;
+    padding-inline: 4em !important;
+    font-weight: bold;
+}

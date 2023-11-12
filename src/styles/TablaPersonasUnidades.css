@@ -1,0 +1,22 @@
+.trash-icon {
+    cursor: pointer;
+    color: #FC6D14;
+    transition: all 0.3s ease !important;
+}
+
+.trash-icon:hover {
+    color: #000000;
+    transform: scale(1.1);
+}
+
+
+
+th {
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+td {
+    padding: 5px;
+}

@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap");
+
+.bg-standard {
+    background-color: #F7F3F0;
+}
+
+body {
+    margin: 0;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+    padding: 0;
+    background-color: blue;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
+}
+
+.button-standard {
+    background-color: #fc6d14 !important;
+    border-color: #b04c0e !important;
+    transition: all 0.2s ease !important;
+    border-width: 2px !important;
+    opacity: 1;
+    font-weight: bold;
+}
+
+.button-standard:hover{
+    opacity: 0.8;
+    font-weight: bold;
+    padding-inline: 2vw;
+}
+
+.btn-primary{
+    background-color: #FC6D14 !important;
+    border-color: #B04C0E !important;
+}
+
+.button-cancel-standard {
+    background-color: grey !important;
+    border-color: rgb(87, 87, 87) !important;
+    transition: all 0.2s ease !important;
+    opacity: 1;
+    padding: auto 1vw;
+}
+
+.button-cancel-standard:hover {
+    opacity: 0.8;
+    font-weight: bold;
+    padding-inline: 1vw;
+}

@@ -1,0 +1,15 @@
+.cambiar-multi-estado{
+    width: fit-content !important;
+    align-self: left;
+    background-color: #FC6D14 !important;
+    border-color: #B04C0E !important;
+    border-width: 2px !important;
+    transition: all 0.3s ease !important;
+    opacity: 1;
+}
+
+.cambiar-multi-estado:hover {
+    opacity: 0.8 !important;
+    padding-inline: 2%;
+    font-weight: bold;
+}

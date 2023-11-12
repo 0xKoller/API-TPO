@@ -1,0 +1,43 @@
+.container {
+    background-color: #F7F3F0;
+    border-radius: 1.5em;
+    margin-top: 3vw;
+}
+
+.container-tables {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.titulo-botones-tabla {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 1.5%;
+    margin-bottom: 2%;
+}
+
+.self-start {
+    margin-right: auto;
+}
+
+.container-single-table {
+    width: 40%;
+    margin: 1em 0em;
+}
+
+.btn-editarUnidad {
+    height: fit-content;
+    align-self: center;
+    border-width: 2px !important;
+    transition: all 0.3s ease !important;
+    opacity: 1;
+}
+
+.btn-editarUnidad:hover {
+    opacity: 0.8 !important;
+    font-weight: bold;
+    padding-inline: 5%;
+}
