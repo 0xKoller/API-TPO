@@ -23,7 +23,7 @@ export default function Recupero(props) {
 			}
 			setError(true)
 		}else{
-			fetch(`http://localhost:8080/api/usuarios/${documento}/cambiarPassword`, {
+			fetch(`http://localhost:8080/usuarios/${documento}/cambiarPassword`, {
 				method: "PUT",
 				headers: {
 					usuario: usuario,

@@ -22,8 +22,8 @@ export default function NuevoReclamo(){
 
     useEffect(() => {
         Promise.all([
-        fetch(`http://localhost:8080/api/usuarios/${documentoUsuario}/edificiosHabilitadosAReclamo`),
-        fetch(`http://localhost:8080/api/usuarios/${documentoUsuario}/unidadesHabilitadasAReclamo`)
+        fetch(`http://localhost:8080/usuarios/${documentoUsuario}/edificiosHabilitadosAReclamo`),
+        fetch(`http://localhost:8080/usuarios/${documentoUsuario}/unidadesHabilitadasAReclamo`)
             ])
         .then(([resEdificios, resUnidades]) => 
         Promise.all([resEdificios.json(), resUnidades.json()])
@@ -74,7 +74,7 @@ export default function NuevoReclamo(){
             if (e.target.unidad.value != '-1') form["identificadorUnidad"] = e.target.unidad.value;
 
             // Ejecutamos el fetch
-            axios.post("http://localhost:8080/api/reclamos", JSON.stringify(form), 
+            axios.post("http://localhost:8080/reclamos", JSON.stringify(form), 
                 {
                     headers: { 
                         'Content-Type': 'application/json;charset=UTF-8',

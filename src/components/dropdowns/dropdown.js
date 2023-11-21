@@ -5,7 +5,7 @@ import { useEffect,useState } from "react";
 export default function Dropdowns({ opcionActual, opcionDefault, drop, user, handleSelect }){
     const [data, setData] = useState([opcionDefault]);
     useEffect(() => {
-        fetch(`http://localhost:8080/api/reclamos/${drop}`, {
+        fetch(`http://localhost:3306/reclamos/${drop}`, {
             method: "GET",
             headers: {
                 'usuario': `${user}`,

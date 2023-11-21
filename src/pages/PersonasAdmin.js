@@ -19,7 +19,7 @@ export default function PersonasAdmin() {
     const [documento, setDocumento] = useState("");
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/usuarios/`)
+        fetch(`http://localhost:8080/usuarios/`)
         .then((response) => response.json())
         .then((d) => {
             setData(d);
@@ -48,7 +48,7 @@ export default function PersonasAdmin() {
         AltaPersonaPopUp()
         .then( (swalRes) => {
             if (swalRes.isConfirmed){
-                axios.post("http://localhost:8080/api/usuarios", JSON.stringify(swalRes.value), 
+                axios.post("http://localhost:8080/usuarios", JSON.stringify(swalRes.value), 
                 {
                     headers: { 
                         'Content-Type': 'application/json;charset=UTF-8',

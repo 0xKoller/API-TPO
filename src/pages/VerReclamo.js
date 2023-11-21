@@ -16,7 +16,7 @@ export default function VerReclamo () {
     const userRoleContext = useContext(UserRoleContext);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/reclamos/${nroReclamo}`)
+        fetch(`http://localhost:8080/reclamos/${nroReclamo}`)
         .then((response) => response.json())
         .then((d) => {
             setReclamo(d)})

@@ -15,11 +15,11 @@ export default function UnidadesAdmin() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/edificios/${idEdificio}/unidades`)
+        fetch(`http://localhost:8080/edificios/${idEdificio}/unidades`)
         .then((response) => response.json())
         .then((d) => {
             setUnidades(d.reverse());
-            return fetch(`http://localhost:8080/api/edificios/${idEdificio}`)
+            return fetch(`http://localhost:8080/edificios/${idEdificio}`)
         })
         .then((response) => response.json())
         .then((d) => {

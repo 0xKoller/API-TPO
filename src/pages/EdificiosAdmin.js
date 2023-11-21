@@ -12,7 +12,7 @@ export default function EdificiosAdmin({ }) {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`http://localhost:8080/api/edificios/admin`, {
+        fetch(`http://localhost:8080/edificios/admin`, {
             method: "GET",
             headers: {
                 usuario: `${usuario}`,

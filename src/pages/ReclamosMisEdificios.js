@@ -21,7 +21,7 @@ export default function ReclamosMisEdificios() {
     const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/reclamos/reclamosPorPersona/${userDoc}/reclamosEnMisEdificios`)
+        fetch(`http://localhost:8080/reclamos/reclamosPorPersona/${userDoc}/reclamosEnMisEdificios`)
         .then((response) => response.json())
         .then((d) => {
             setData(d);

@@ -21,7 +21,7 @@ export default function HomeAdmin() {
     const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/reclamos/admin", {
+        fetch("http://localhost:8080/reclamos/admin", {
             method: "GET",
             headers: {
                 usuario: `${usuario}`

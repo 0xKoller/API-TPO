@@ -26,7 +26,7 @@ export default function TablaReclamos ({ data, esAdmin, misReclamos }) {
     useEffect(() => {setReclamos(data)}, [data])
 
     function cambiarEstadoPromise(numero, estado, motivo){
-        return fetch(`http://localhost:8080/api/reclamos/${numero}/cambiarEstado`,
+        return fetch(`http://localhost:3306/reclamos/${numero}/cambiarEstado`,
         {
             method: "PUT",
             cors: "no-cors",

@@ -68,7 +68,7 @@ async function CambiarEstadoPopUp() {
     
 
     const SwalReact = withReactContent(Swal);
-    const estados = await fetch("http://localhost:8080/api/reclamos/estados")
+    const estados = await fetch("http://localhost:3306/reclamos/estados")
                     .then((response) => response.json())
                     .then((d) => d)
     let estado = "";

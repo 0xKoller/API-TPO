@@ -20,7 +20,7 @@ export default function EditarUnidades() {
 		ValidationPopUp(`Liberar unidad?`, "Esta seguro que desea liberar la unidad?", "Liberar")
 		.then((swalRes) => {
 			if (swalRes.isConfirmed) {
-				fetch(`http://localhost:8080/api/unidades/${unidad.id}/liberar`,
+				fetch(`http://localhost:8080/unidades/${unidad.id}/liberar`,
 				{
 					method: "PUT",
 					cors: "no-cors",
@@ -47,7 +47,7 @@ export default function EditarUnidades() {
 	}
 
 	const habitarUnidad = () =>{
-		fetch(`http://localhost:8080/api/unidades/${unidad.id}/habitar`,{
+		fetch(`http://localhost:8080/unidades/${unidad.id}/habitar`,{
 				method: "PUT",
 				cors: "no-cors",
 				cache: "no-cache",
@@ -73,7 +73,7 @@ export default function EditarUnidades() {
 	}
 
 	const deshabitarUnidad = () =>{
-		fetch(`http://localhost:8080/api/unidades/${unidad.id}/deshabitar`,{
+		fetch(`http://localhost:8080/unidades/${unidad.id}/deshabitar`,{
 				method: "PUT",
 				cors: "no-cors",
 				cache: "no-cache",
@@ -99,7 +99,7 @@ export default function EditarUnidades() {
 	}
 
 	const validarExistenciaPersona = async (persona) =>{
-		return await fetch(`http://localhost:8080/api/usuarios/${persona}`)
+		return await fetch(`http://localhost:8080/usuarios/${persona}`)
 		.then((response) => response.status===200)
 	}
 
@@ -107,7 +107,7 @@ export default function EditarUnidades() {
 		let duenio;
 		InputPopUp("Agregar Dueño",'Ingrese el documento del nuevo dueño',"DNI11111111",validarExistenciaPersona,"La persona de documento ingresado no se encuentra registrada", "Agregar")
 		.then(async (swalRes) => {
-			await fetch(`http://localhost:8080/api/usuarios/${swalRes.value}`)
+			await fetch(`http://localhost:8080/usuarios/${swalRes.value}`)
 			.then(async (response) => response.json())
 			.then((data)=> {
 				duenio = data
@@ -127,7 +127,7 @@ export default function EditarUnidades() {
 	}
 
 	const agregarDuenio = (duenio) =>{
-		return fetch(`http://localhost:8080/api/unidades/${unidad.id}/agregarDuenio/${duenio.documento}`,
+		return fetch(`http://localhost:8080/unidades/${unidad.id}/agregarDuenio/${duenio.documento}`,
 		{
 			method: "PUT",
 			cors: "no-cors",
@@ -152,7 +152,7 @@ export default function EditarUnidades() {
 		let inquilino;
 		InputPopUp("Agregar Inquilino",'Ingrese el documento del nuevo inquilino',"DNI11111111",validarExistenciaPersona,"La persona de documento ingresado no se encuentra registrada", "Agregar")
 		.then((swalRes) => {
-			fetch(`http://localhost:8080/api/usuarios/${swalRes.value}`)
+			fetch(`http://localhost:8080/usuarios/${swalRes.value}`)
 			.then(async (response) => response.json())
 			.then((data)=> {
 				inquilino = data
@@ -172,7 +172,7 @@ export default function EditarUnidades() {
 	}
 
 	const agregarInquilino = (inquilino) =>{
-		return fetch(`http://localhost:8080/api/unidades/${unidad.id}/agregarInquilino/${inquilino.documento}`,
+		return fetch(`http://localhost:8080/unidades/${unidad.id}/agregarInquilino/${inquilino.documento}`,
 		{
 			method: "PUT",
 			cors: "no-cors",
@@ -194,7 +194,7 @@ export default function EditarUnidades() {
 	}
 
 	const alquilarUnidad = (inquilino) =>{
-		return fetch(`http://localhost:8080/api/unidades/${unidad.id}/alquilar/${inquilino.documento}`,
+		return fetch(`http://localhost:8080/unidades/${unidad.id}/alquilar/${inquilino.documento}`,
 		{
 			method: "PUT",
 			cors: "no-cors",
@@ -220,7 +220,7 @@ export default function EditarUnidades() {
 		await ValidationPopUp("Esta seguro?", `Se eliminará a ${duenio.nombre} - ${duenio.documento}`, "Eliminar")
 		.then(async (swalResult) => {
 			if (swalResult.isConfirmed) {
-				fetch(`http://localhost:8080/api/unidades/${unidad.id}/eliminarDuenio/${duenio.documento}`,
+				fetch(`http://localhost:8080/unidades/${unidad.id}/eliminarDuenio/${duenio.documento}`,
 					{
 						method: "PUT",
 						cors: "no-cors",
@@ -249,7 +249,7 @@ export default function EditarUnidades() {
 		await ValidationPopUp("Esta seguro?", `Se eliminará a ${inquilino.nombre} - ${inquilino.documento}`,"Eliminar")
 		.then(async (swalResult) => {
 			if (swalResult.isConfirmed) {
-				fetch(`http://localhost:8080/api/unidades/${unidad.id}/eliminarInquilino/${inquilino.documento}`,
+				fetch(`http://localhost:8080/unidades/${unidad.id}/eliminarInquilino/${inquilino.documento}`,
 				{
 					method: "PUT",
 					cors: "no-cors",
@@ -281,7 +281,7 @@ export default function EditarUnidades() {
 		let duenio;
 		InputPopUp("Transferir unidad",'Ingrese el documento del nuevo dueño',"DNI11111111",validarExistenciaPersona,"La persona de documento ingresado no se encuentra registrada","Transferir")
 		.then(async (swalRes) => {
-			await fetch(`http://localhost:8080/api/usuarios/${swalRes.value}`)
+			await fetch(`http://localhost:8080/usuarios/${swalRes.value}`)
 			.then(async (response) => response.json())
 			.then((data)=> {
 				duenio = data
@@ -299,7 +299,7 @@ export default function EditarUnidades() {
 	}
 
 	const transferirUnidad = (duenio) =>{
-		return fetch(`http://localhost:8080/api/unidades/${unidad.id}/transferir/${duenio.documento}`,
+		return fetch(`http://localhost:8080/unidades/${unidad.id}/transferir/${duenio.documento}`,
 		{
 			method: "PUT",
 			cors: "no-cors",
@@ -321,15 +321,15 @@ export default function EditarUnidades() {
 	}
 
 	useEffect(() => {
-		fetch(`http://localhost:8080/api/unidades/${idUnidad}`)
+		fetch(`http://localhost:8080/unidades/${idUnidad}`)
 		.then((response) => response.json())
 		.then((d) => {
 			setUnidad(d);
-			return fetch(`http://localhost:8080/api/unidades/${idUnidad}/duenios`)
+			return fetch(`http://localhost:8080/unidades/${idUnidad}/duenios`)
 		}).then((response) =>  response.json())
 		.then((d) => {
 			setDuenios(d)
-			return fetch(`http://localhost:8080/api/unidades/${idUnidad}/inquilinos`)
+			return fetch(`http://localhost:8080/unidades/${idUnidad}/inquilinos`)
 		}).then((response) => response.json())
 		.then((d)=> {
 			setInquilinos(d)	

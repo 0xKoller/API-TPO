@@ -12,17 +12,21 @@ export default function Login(props) {
 
 	const validarLogin = (e) => {
 		e.preventDefault();
-		fetch("http://localhost:8080/api/usuarios/login", {
-			method: "POST",
-			headers: {
-				usuario: e.target[0].value,
-				password: e.target[1].value,
-			},
-		}).then(async (response) => {
-			if (response.status === 200) {
-				let rol; let documento;
-				await response.text().then((res)=> JSON.parse(res)).then((res) => { rol = res.rol; documento = res.documento});
-				console.log("Autenticacion exitosa")
+		fetch("http://localhost:8080/auth/login", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "http://localhost:3000/", 
+    },
+    body: JSON.stringify({
+        nombreUsuario: e.target[0].value,
+        contrasenia: e.target[1].value,
+    }),
+}).then(async (response) => {
+	if (response.status === 200) {
+				let rol; let documento; let jwt;
+				await response.text().then((res)=> JSON.parse(res)).then((res) => { rol = res.rolUsuario; documento = res.dni; jwt= res.token});
+				console.log(jwt)
 				sessionStorage.setItem("user", e.target[0].value)
 				setUser(e.target[0].value)
 				sessionStorage.setItem("userRole", rol)
