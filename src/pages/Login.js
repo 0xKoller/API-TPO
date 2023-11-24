@@ -6,36 +6,38 @@ import ErrorMessage from "../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 
 export default function Login(props) {
-	const {setIsUserAuthenticated, setUserRole, setUser, setUserDoc, landingPageAdmin, landingPageUsuarioBasico} = props;
+	const {setIsUserAuthenticated, setUserRole, setUser, setUserDoc, landingPageAdmin, landingPageUsuarioBasico, setUserBearer} = props;
 	const [error, setError] = useState(false);
 	const navigate = useNavigate();
 
 	const validarLogin = (e) => {
 		e.preventDefault();
 		fetch("http://localhost:8080/auth/login", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "http://localhost:3000/", 
-    },
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "http://localhost:3000/", 
+		},
     body: JSON.stringify({
         nombreUsuario: e.target[0].value,
         contrasenia: e.target[1].value,
     }),
 }).then(async (response) => {
 	if (response.status === 200) {
-				let rol; let documento; let jwt;
-				await response.text().then((res)=> JSON.parse(res)).then((res) => { rol = res.rolUsuario; documento = res.dni; jwt= res.token});
-				console.log(jwt)
-				sessionStorage.setItem("user", e.target[0].value)
-				setUser(e.target[0].value)
-				sessionStorage.setItem("userRole", rol)
-				setUserRole(rol)
-				sessionStorage.setItem("userDoc", documento)
-				setUserDoc(documento)
+				let rol; let documento; let jwt; let user; 
+				await response.text().then((res)=> JSON.parse(res)).then((res) => {user = res.usuario; jwt= res.token});
+				sessionStorage.setItem("userBearer", jwt)
+				setUserBearer(jwt)
+				sessionStorage.setItem("user", user.nombreUsuario)
+				setUser(user.nombreUsuario)
+				sessionStorage.setItem("userRole", user.rolUsuario)
+				setUserRole(user.rolUsuario)
+				sessionStorage.setItem("userDoc", user.id)
+				setUserDoc(user.id)
 				sessionStorage.setItem("isUserAuthenticated", true)
 				setIsUserAuthenticated(true)
-				rol === "administrador" ? navigate(landingPageAdmin) : navigate(landingPageUsuarioBasico);
+				rol = user.rolUsuario;
+				rol === "empleado" ? navigate(landingPageAdmin) : navigate(landingPageUsuarioBasico);
 			} else {
 				setError(true);
 			}

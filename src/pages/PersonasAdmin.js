@@ -1,7 +1,7 @@
 import "../styles/AdminPages.css";
 import "../styles/PersonasAdmin.css";
 import { useContext, useEffect, useState } from "react";
-import {UserContext} from "../App";
+import {UserBearer, UserContext, UserDocumentContext} from "../App";
 import { Loader } from "@mantine/core";
 import ListPersonas from "../components/personas/tablaPersonas";
 import Buscador from "../components/buscador/searchPersona";
@@ -11,54 +11,58 @@ import axios from "axios";
 
 
 export default function PersonasAdmin() {
-    const usuario = useContext(UserContext);
-    
+        
     const [data, setData] = useState([]);
     const [dataInicial, setDataInicial] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [documento, setDocumento] = useState("");
+    const bearer = useContext(UserBearer);
+    const userDoc = useContext(UserDocumentContext);
+
+    const getUsers = async () => {
+        axios.get(`http://localhost:8080/tpo_apis/usuarios`, {
+        headers: {
+            Autorization: `Bearer ${bearer}`
+        }
+    }).then((response) => {
+        setDataInicial(response.data);
+    });
+    }
 
     useEffect(() => {
-        fetch(`http://localhost:8080/usuarios/`)
-        .then((response) => response.json())
-        .then((d) => {
-            setData(d);
-            setDataInicial(d);
-        }).catch(e => console.log(e))
-        .finally(() => setLoading(false))
-    }, []);
+    getUsers();
+}, []);
+  
+    useEffect(() => {
+    const newData = {};
+    dataInicial.forEach(e => {
+        if (e.id !== userDoc) {
+            newData[e.id] = e;
+        }
+    });
 
-    if (loading) {
-        return (
-          <div className="loading">
-            <div className="loader">
-              <Loader color="#FC6D14" />
-            </div>
-            <h3>Estamos buscando a todas las personas</h3>
-          </div>
-        );
-      }
+    // Convirtiendo el objeto de usuarios únicos a un array
+    const filteredData = Object.values(newData);
 
-    const handleInputBuscador = documento => {
-        documento === "" ? setData(dataInicial) : setData(dataInicial.filter(persona => persona.documento.slice(0,documento.length) == documento));
-        setDocumento(documento);
-    }
+    // Actualizando el estado 'data' con los datos filtrados
+    setData(filteredData);
+}, [dataInicial]);
 
     function addPersonAction(){
         AltaPersonaPopUp()
         .then( (swalRes) => {
             if (swalRes.isConfirmed){
-                axios.post("http://localhost:8080/usuarios", JSON.stringify(swalRes.value), 
+                console.log(swalRes.value)
+                axios.post("http://localhost:8080/tpo_apis/usuarios", JSON.stringify(swalRes.value), 
                 {
                     headers: { 
                         'Content-Type': 'application/json;charset=UTF-8',
-                        usuario: usuario
+                        Autorization: `Bearer ${bearer}`
                      }
                 })
                 .then( (e) => {
                     SuccessPopUp("Persona creada con éxito!", `Has creado correctamente a ${swalRes.value.nombre}`);
-                    setData([...data, {...swalRes.value}])
-                    setDataInicial([...dataInicial, {...swalRes.value}])
+                    getUsers();
                 })
                 .catch( (e) => ErrorPopUp("No se pudo crear la persona", e.response.data)
                 )
@@ -73,11 +77,15 @@ export default function PersonasAdmin() {
             </section>
             <section className="personas">
                 <div className="filtros">
-                    <Buscador documento={documento} handleInput={documento => handleInputBuscador(documento)}/>
-                    <Button variant="primary" className="agregar-persona button-standard" onClick={addPersonAction}> Agregar </Button>
+                    
+                    <Button variant="primary" className="agregar-persona button-standard" onClick={addPersonAction} > Agregar </Button>
                 </div>
-                {data.length >= 1 ? 
-                <ListPersonas props={data} />
+                {data && data.length >= 1 ? 
+                data.map((persona) => <div className='card d-flex flex-row justify-content-evenly m-1 align-content-center'>
+                    <p className='fw-bold mx-1'>Nombre: <span className='fw-normal'>{persona.nombreUsuario}</span></p>
+                    <p className='fw-bold mx-1'>Rol: <span className='fw-normal'>{persona.rolUsuario}</span></p>
+                    <p className='fw-bold mx-1'>ID: <span className='fw-normal'>{persona.id}</span></p>
+                </div>)    
                 : <h4 className="mensaje-error">No hay ninguna persona con ese documento</h4>
                 }
                 

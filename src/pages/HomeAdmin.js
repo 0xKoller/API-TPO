@@ -1,27 +1,18 @@
 import "../styles/HomeAdmin.css";
 import "../styles/AdminPages.css";
 import { useContext, useEffect, useState } from "react";
-import { Loader } from "@mantine/core";
-import TablaReclamos from "../components/reclamos/tablaReclamos";
-import Drops from "../components/dropdowns/dropdown";
-import Buscador from "../components/buscador/searchReclamo";
 import { UserContext } from "../App";
-import { HandleSelectEdificio, HandleSelectEstado, HandleInputBuscador } from "../components/reclamos/FuncionesReclamos";
+import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 export default function HomeAdmin() {
     const usuario = useContext(UserContext);
     const [data, setData] = useState([]);
-    const [dataInicial, setDataInicial] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const opcionDefaultEstados = "-- Elija un estado --";
-    const opcionDefaultEdificios = "-- Elija un edificio --";
-    const nroReclamoDefault = "";
-    const [estadoReclamo, setEstadoReclamo] = useState(opcionDefaultEstados);
-    const [edificioReclamo, setEdificioReclamo] = useState(opcionDefaultEdificios);
-    const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:8080/reclamos/admin", {
+        fetch("http://localhost:8080/tpo_apis/reclamos", {
             method: "GET",
             headers: {
                 usuario: `${usuario}`
@@ -30,34 +21,17 @@ export default function HomeAdmin() {
         .then((response) => response.json())
         .then((d) => {
             setData(d);
-            setDataInicial(d);
+            console.log(d)
         }).catch(e => console.log(e))
         .finally(() => setLoading(false));
     }, []);
-
-    if (loading) {
-        return (
-          <div className="loading">
-            <div className="loader">
-              <Loader color="#FC6D14" />
-            </div>
-            <h3>Estamos buscando todos los reclamos</h3>
-          </div>
-        );
-    }
     
-    const handleSelectEstado = estado => {
-        HandleSelectEstado({estado, setData, dataInicial, setEstadoReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, edificioReclamo, nroReclamoDefault});
+    const handleReclamo = (id) => {
+        navigate(`../reclamos/${id}`);
     }
-
-    const handleSelectEdificio = edificio => {
-        HandleSelectEdificio({edificio, setData, dataInicial, setEdificioReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, estadoReclamo, nroReclamoDefault});
+    const nuevoReclamo = () => {
+        navigate("../nuevoreclamo");
     }
-
-    const handleInputBuscador = nroReclamo => {
-        HandleInputBuscador({nroReclamo, setData, dataInicial, setEstadoReclamo, setEdificioReclamo, setNroReclamo, opcionDefaultEstados, opcionDefaultEdificios});
-    }
-    
     return(
         <div className="principal">
             <section className="navigation">
@@ -66,23 +40,17 @@ export default function HomeAdmin() {
                 </div>
             </section>
             <section className="reclamos">
-                <div className="filtros">
-                    <Buscador nroReclamo={nroReclamo} handleInput={nroReclamo => handleInputBuscador(nroReclamo)}/>
-                    <div className="drop-estados">
-                        <h6 className="titulos-filtros">Estados</h6>
-                        <Drops opcionActual={estadoReclamo} opcionDefault={opcionDefaultEstados} drop={"estados"} user={usuario} handleSelect={estado => handleSelectEstado(estado)}/>
-                    </div>
-                    <div className="drop-edificios">
-                        <h6 className="titulos-filtros">Edificios</h6>
-                        <Drops opcionActual={edificioReclamo} opcionDefault={opcionDefaultEdificios} drop={"edificios"} user={usuario} handleSelect={edificio => handleSelectEdificio(edificio)}/>
-                    </div>
+                <Button variant="primary" className="button-new-reclamo" onClick={nuevoReclamo}>Nuevo reclamo</Button>
+                <div>
+                    {data && data.length > 0 ? data.map((reclamo) => <div key={reclamo.id} className='container-fluid d-flex flex-row justify-content-evenly m-2 card py-2 align-items-center'>
+                        <p className='fw-bold mx-1'>Edificio: <span className='fw-normal'>{reclamo.edificio}</span></p>
+                        <p className='fw-bold mx-1'>Unidad: <span className='fw-normal'>{reclamo.unidad}</span></p>
+                        <p className='fw-bold mx-1'>Estado: <span className='fw-normal'>{reclamo.estado}</span></p>
+                        <p className='fw-bold mx-1'>Descripcion: <span className='fw-normal'>{reclamo.descripcion}</span></p>
+                        <p className='fw-bold mx-1'>Area comun: <span className='fw-normal'>{reclamo.areaComun}</span></p>
+                        <button className='btn btn-primary' onClick={() => handleReclamo(reclamo.id)}>Ver reclamo</button>
+                    </div>) :null}
                 </div>
-                {data.length == 0 ? 
-                    <h4 className="mensaje-error">No hay reclamos cargados</h4>
-                    : (<TablaReclamos data={data} esAdmin={true}/> != null ?
-                    <TablaReclamos data={data} esAdmin={true}/>
-                    : <h4 className="mensaje-error">No existen reclamos con las especificaciones brindadas</h4>)
-                }
             </section>
         </div>
     );

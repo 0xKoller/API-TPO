@@ -5,85 +5,95 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import { UserContext, UserDocumentContext } from "../App";
+import { UserContext, UserDocumentContext, UserBearer, UserRoleContext } from "../App";
 import { SuccessPopUp, ErrorPopUp } from "../components/SwalPopUps/SwalPopUps"
 import { Loader } from "@mantine/core";
 
 export default function NuevoReclamo(){
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [edificiosHabilitados, setEdificiosHabilitados] = useState([]);
     const [unidadesHabilitadas, setUnidadesHabilitadas] = useState([]);
     const [edificioSeleccionado, setEdificioSeleccionado] = useState();
+    const [unidades, setUnidades] = useState([]);
+
     const archivosURL = [];
     const navigate = useNavigate();
 
     const documentoUsuario = useContext(UserDocumentContext);
     const usuario = useContext(UserContext)
+    const bearer = useContext(UserBearer);
+    const id = useContext(UserDocumentContext)
+    const role = useContext(UserRoleContext)
+    console.log(id)
+    useEffect(() => {
+        axios.get(`http://localhost:8080/tpo_apis/edificios`, {
+            headers: {
+                Authorization: `Bearer ${bearer}`
+            }
+    }).then((response) => {
+            console.log(response.data)
+            setEdificiosHabilitados(response.data);
+        }).catch(e => console.log(e))
+    }, []);
 
     useEffect(() => {
-        Promise.all([
-        fetch(`http://localhost:8080/usuarios/${documentoUsuario}/edificiosHabilitadosAReclamo`),
-        fetch(`http://localhost:8080/usuarios/${documentoUsuario}/unidadesHabilitadasAReclamo`)
-            ])
-        .then(([resEdificios, resUnidades]) => 
-        Promise.all([resEdificios.json(), resUnidades.json()])
-        )
-        .then(([dataEdificios, dataUnidades]) => {
-            setEdificiosHabilitados(dataEdificios);
-            setUnidadesHabilitadas(dataUnidades);
+        console.log(edificioSeleccionado)
+    if (edificioSeleccionado) {
+        // Asegúrate de que edificioSeleccionado es convertido al tipo correcto.
+// Si edificioSeleccionado es un string, conviértelo a número.
+const idSeleccionado = Number(edificioSeleccionado);
 
-            setEdificioSeleccionado(dataEdificios[0].codigo);
-        })
-        .finally(() => setLoading(false));
-    }, []);
+const edificio = edificiosHabilitados.find(edificio => edificio.id === idSeleccionado);
+console.log(edificio);
+
     
+        if(edificio.unidades && edificio.unidades.length > 0){
+
+            console.log("Entro")
+            const unidadesPorUsuario = edificio.unidades.filter(unidad =>
+                unidad.duenio.id === id || (unidad.inquilino && unidad.inquilino.id === id)
+                );
+                console.log(unidadesPorUsuario)
+                setUnidades(unidadesPorUsuario);
+            }
+        
+    } else {
+        // Si no hay unidades, establecer unidadesFiltradas como un array vacío.
+        setUnidades([]);
+    }
+
+}, [edificioSeleccionado, id]);
+
 
     function sendNuevoReclamo(e){
         e.preventDefault();
         // Subimos imagenes a Cloudinary
-        const files = Array.from(e.target.imagen.files);
-        const uploaders = files.map((file) => {
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("upload_preset", "tpo-api");
-            formData.append("api_key", 451325535756131);
-            return axios.post("https://api.cloudinary.com/v1_1/dayw2rwz8/image/upload", formData)
-            .then(response => {
-                const data = response.data;
-                const imagen = {
-                    "direccion": data.secure_url,
-                    "tipo": data.format
-                }
-                //Obtenemos las URL de las imagenes y las agregamos al Array
-                archivosURL.push(imagen);
-            })
-        });
-
-        // Una vez que subimos todas las imagenes, creamos el reclamo
-        axios.all(uploaders).then(() => 
-        {
+        const files = e.target.imagen.files;
+        console.log(files["0"])
             const form = {
-                "documento": documentoUsuario,
-                "codigoEdificio": edificioSeleccionado,
-                "ubicacion": e.target.ubicacion.value,
-                "descripcion": e.target.descripcion.value,
-                "imagenes": archivosURL,
-                "estado": "Abierto"
+                "usuario":id,
+                "unidad": null,
+                "areaComun": null,
+                "descripcion": "Descripción de mi reclamo",
+                "edificio":null,
+                "estado": "ANULADO",
+                "fotos": null,
+                "fechaCreacion": "2023-10-31T08:00:00",
+                "fechaModificacion": "2023-11-31T08:00:00"
             }
-            // Si la unidad "Area comun" (value = -1) no enviamos la unidad
-            if (e.target.unidad.value != '-1') form["identificadorUnidad"] = e.target.unidad.value;
 
             // Ejecutamos el fetch
-            axios.post("http://localhost:8080/reclamos", JSON.stringify(form), 
+            axios.post("http://localhost:8080/tpo_apis/reclamos", JSON.stringify(form), 
                 {
                     headers: { 
                         'Content-Type': 'application/json;charset=UTF-8',
-                        usuario: usuario
+                        'Authorization': `Bearer ${bearer}`
                      }
 
                 })
                 .then((e) => {
                     // Si fue exitosa mostramos un PopUp de exito
+                    console.log(e.data)
                     SuccessPopUp('Reclamo creado con éxito!',`Tu número de reclamo: ${e.data}`)
                     .then(() => navigate('/misreclamos')) // Redirigimos a Mis Reclamos
                 })
@@ -91,9 +101,11 @@ export default function NuevoReclamo(){
                     // Si la peticion ha fallado, mostramos un PopUp de error
                     ErrorPopUp("No se ha podido crear el reclamo", "Inténtelo nuevamente mas tarde")
                 })
-            })
+            
         } 
     
+
+
     function redirectToHome(){
         navigate("/misreclamos");
     }
@@ -115,30 +127,23 @@ export default function NuevoReclamo(){
                     <Form onSubmit={sendNuevoReclamo}>
                         <Form.Group className="nuevoReclamo-form-group">
                             <Form.Label className="nuevoReclamo-form-group-label">Edificio:</Form.Label>
-                            {edificiosHabilitados.length > 1
-                            ? <Form.Select onChange={(e) => setEdificioSeleccionado(e.target.value)} className="nuevoReclamo-form-group-input">
-                                    {edificiosHabilitados && edificiosHabilitados.length > 0
-                                    ? edificiosHabilitados.map((edificio) => 
-                                        <option key={edificio.codigo} value={edificio.codigo} name="edificio">{edificio.nombre}</option>)
-                                    : null
-                                    }
-                               </Form.Select>
-                            : null
-                            }
-                            {edificiosHabilitados.length == 1
-                            ? <Form.Label className="nuevoReclamo-form-group-input" value={edificiosHabilitados[0].codigo}>{edificiosHabilitados[0].nombre}</Form.Label>
-                            : null
-                            }
+                            <Form.Select className="nuevoReclamo-form-group-input" name="edificio" onChange={(e) => setEdificioSeleccionado(e.target.value)}>
+                                <option value="-1"></option>
+                                {edificiosHabilitados && edificiosHabilitados.length > 0
+                                ? edificiosHabilitados.map((edificio) =>
+                                        <option key={edificio.id} value={edificio.id} name="unidad">{edificio.nombre}</option>
+                                         )
+                                : null}
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="nuevoReclamo-form-group">
                             <Form.Label className="nuevoReclamo-form-group-label">Unidad:</Form.Label>
                             <Form.Select className="nuevoReclamo-form-group-input" name="unidad">
                                 <option value="-1">Area común</option>
-                                {unidadesHabilitadas && unidadesHabilitadas.length > 0
-                                ? unidadesHabilitadas.map((unidad) => 
-                                    unidad.edificio.codigo == edificioSeleccionado 
-                                    ? <option key={unidad.id} value={unidad.id} name="unidad">Piso: {unidad.piso}, Unidad: {unidad.numero}</option>
-                                    : null)
+                                {role && (role === "inquilino" || role === "duenio")
+                                ? unidades.map((unidad) => 
+                                     <option key={unidad.id} value={unidad.id} name="unidad">Piso: {unidad.piso}, Unidad: {unidad.nroUnidad}</option>
+                                    )
                                 : null
                                 }
                             </Form.Select>
@@ -153,7 +158,7 @@ export default function NuevoReclamo(){
                         </Form.Group>
                         <Form.Group className="nuevoReclamo-form-group">
                             <Form.Label className="nuevoReclamo-form-group-labelImagenes">Imagenes:</Form.Label>
-                            <Form.Control type="file" multiple name="imagen" accept="image/*" className="nuevoReclamo-form-group-inputFile"/>
+                            <Form.Control type="file" name="imagen" accept="image/*" className="nuevoReclamo-form-group-inputFile"/>
                         </Form.Group>
                         <div className="text-center mt-5 btns-div">
                             <Button className="button-cancel-standard" onClick={redirectToHome}>Cancelar</Button>

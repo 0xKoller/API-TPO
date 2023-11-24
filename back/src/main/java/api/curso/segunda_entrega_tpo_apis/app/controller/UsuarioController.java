@@ -32,12 +32,10 @@ public class UsuarioController {
 	public List<UsuarioDTO> findAll() {
 		List<Usuario> usuarios = usuarioService.findAll();
 		List<UsuarioDTO> usuarioDTOs = new ArrayList<>();
-
 		for (Usuario usuario : usuarios) {
 			UsuarioDTO usuarioDTO = convertToDTO(usuario);
 			usuarioDTOs.add(usuarioDTO);
 		}
-
 		return usuarioDTOs;
 	}
 
@@ -71,8 +69,6 @@ public class UsuarioController {
 	@PostMapping("/usuarios")
 	public ResponseEntity<UsuarioDTO> addUsuario(@RequestBody UsuarioDTO usuarioDTO) {
 		Usuario usuario = convertToEntity(usuarioDTO);
-
-		
 		
 		usuarioService.save(usuario);
 
@@ -82,7 +78,6 @@ public class UsuarioController {
 
 	}
 
-	@PreAuthorize("hasRole('empleado')")
 	@PutMapping("/usuarios/{usuarioId}")
 	public ResponseEntity<?> updateUsuario(@PathVariable int usuarioId, @RequestBody UsuarioDTO usuarioDTO) {
 		Usuario usuarioOld = usuarioService.findById(usuarioId);
@@ -100,7 +95,6 @@ public class UsuarioController {
 		return new ResponseEntity<>(usuarioUpdatedDTO, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasRole('empleado')")
 	@DeleteMapping("/usuarios/{usuarioId}")
 	public ResponseEntity<String> deleteUsuario(@PathVariable int usuarioId) {
 		Usuario usuario = usuarioService.findById(usuarioId);
@@ -117,7 +111,7 @@ public class UsuarioController {
 	}
 
 	private UsuarioDTO convertToDTO(Usuario usuario) {
-		UsuarioDTO usuarioDTO = new UsuarioDTO(usuario.getNombreUsuario(), usuario.getContrasenia(), usuario.getRolUsuario());
+		UsuarioDTO usuarioDTO = new UsuarioDTO(usuario.getNombreUsuario(), usuario.getContrasenia(), usuario.getRolUsuario(), usuario.getId());
 		return usuarioDTO;
 	}
 
@@ -126,6 +120,7 @@ public class UsuarioController {
 		usuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
 		usuario.setContrasenia(usuarioDTO.getContrasenia());
 		usuario.setRolUsuario(usuarioDTO.getRolUsuario());
+		usuario.setId(usuarioDTO.getId());
 		return usuario;
 	}
 }

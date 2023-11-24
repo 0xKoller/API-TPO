@@ -4,7 +4,8 @@ public class UsuarioDTO {
 	private String nombreUsuario;
 	private String contrasenia;
 	private RolUsuario rolUsuario;
-	
+	private int id;
+
 	public UsuarioDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -12,11 +13,12 @@ public class UsuarioDTO {
 	
 	
 
-	public UsuarioDTO(String nombreUsuario, String contrasenia, RolUsuario rolUsuario) {
+	public UsuarioDTO(String nombreUsuario, String contrasenia, RolUsuario rolUsuario, int id) {
 		super();
 		this.nombreUsuario = nombreUsuario;
 		this.contrasenia = contrasenia;
 		this.rolUsuario = rolUsuario;
+		this.id = id;
 	}
 
 
@@ -45,5 +47,9 @@ public class UsuarioDTO {
 		this.rolUsuario = rolUsuario;
 	}
 
-	
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id){this.id = id;}
 }

@@ -101,31 +101,42 @@ async function CambiarEstadoPopUp() {
 async function AltaPersonaPopUp() {
     const SwalReact = withReactContent(Swal);
 
-    let documento = "";
+    let dni = "";
     let nombre = "";
-    let apellido = "";
-    let usuario = "";
-    let password = "";
+    let email = "";
+    let nombreUsuario = "";
+    let contrasenia = "";
+    let rolUsuario = ""; // Variable para almacenar el rol seleccionado
 
     return SwalReact.fire({
         title: 'Alta Persona',
-        confirmButtonColor:"#FC6D14",
+        confirmButtonColor: "#FC6D14",
         confirmButtonText: "Crear",
         focusConfirm: false,
-        html: <>
-            <input className="swal2-input" name="documento" onChange={(e) => { documento = e.target.value }} placeholder={"Documento"} />
-            <input className="swal2-input" name="nombre" onChange={(e) => { nombre = e.target.value }} placeholder={"Nombres"} />
-            <input className="swal2-input" name="apellido" onChange={(e) => { apellido = e.target.value }} placeholder={"Apellidos"} />
-            <input className="swal2-input" name="usuario" onChange={(e) => { usuario = e.target.value }} placeholder={"Usuario"} />
-            <input className="swal2-input" type="password" name="password" onChange={(e) => { password = e.target.value }} placeholder={"Contraseña"} />
-          
-            </>,
+        html: (
+            <>
+                {/* <input className="swal2-input" name="dni" onChange={(e) => { dni = e.target.value }} placeholder={"DNI"} /> */}
+                {/* <input className="swal2-input" name="nombre" onChange={(e) => { nombre = e.target.value }} placeholder={"Nombres"} /> */}
+                {/* <input className="swal2-input" name="email" onChange={(e) => { email = e.target.value }} placeholder={"Email"} /> */}
+                <input className="swal2-input" name="nombreUsuario" onChange={(e) => { nombreUsuario = e.target.value }} placeholder={"Usuario"} />
+                <input className="swal2-input" type="password" name="contrasenia" onChange={(e) => { contrasenia = e.target.value }} placeholder={"Contraseña"} />
+                <select className="swal2-input" name="rolUsuario" onChange={(e) => { rolUsuario = e.target.value }}>
+                    <option value="">Seleccionar Rol</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="duenio">Dueño</option>
+                    <option value="inquilino">Inquilino</option>
+                </select>
+            </>
+        ),
         preConfirm: () => {
-            if (!documento || !nombre || !apellido || !usuario || !password) SwalReact.showValidationMessage("Debe completar todos los campos");
-            return { documento: documento, nombre: `${apellido}, ${nombre}`, usuario:usuario, password:password, rol:"basico" }
+            if ( !nombreUsuario || !contrasenia || !rolUsuario) {
+                SwalReact.showValidationMessage("Debe completar todos los campos");
+            }
+            return { nombreUsuario, contrasenia, rolUsuario }
         }
-    })
+    });
 }
+
 
 
 export {ErrorPopUp, SuccessPopUp, InputPopUp, ValidationPopUp, CambiarEstadoPopUp, AltaPersonaPopUp}

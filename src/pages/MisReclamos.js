@@ -16,24 +16,24 @@ export default function MisReclamos(props) {
     const userDoc = useContext(UserDocumentContext);
     const [data, setData] = useState([]);
     const [dataInicial, setDataInicial] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const opcionDefaultEstados = "-- Elija un estado --";
     const opcionDefaultEdificios = "-- Elija un edificio --";
     const nroReclamoDefault = "";
-    const [estadoReclamo, setEstadoReclamo] = useState(opcionDefaultEstados);
-    const [edificioReclamo, setEdificioReclamo] = useState(opcionDefaultEdificios);
-    const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
+    // const [estadoReclamo, setEstadoReclamo] = useState(opcionDefaultEstados);
+    // const [edificioReclamo, setEdificioReclamo] = useState(opcionDefaultEdificios);
+    // const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
 
-    useEffect(() => {
-        fetch(`http://localhost:8080/api/reclamos/reclamosPorPersona/${userDoc}/misReclamos`)
-        .then((response) => response.json())
-        .then((d) => {
-            setData(d);
-            setDataInicial(d);
-        }).catch(e => console.log(e))
-        .finally(() => setLoading(false));
-    }, []);
+    // useEffect(() => {
+    //     fetch(`http://localhost:8080/api/reclamos/reclamosPorPersona/${userDoc}/misReclamos`)
+    //     .then((response) => response.json())
+    //     .then((d) => {
+    //         setData(d);
+    //         setDataInicial(d);
+    //     }).catch(e => console.log(e))
+    //     .finally(() => setLoading(false));
+    // }, []);
 
     if (loading) {
         return (
@@ -50,17 +50,17 @@ export default function MisReclamos(props) {
         navigate("../nuevoreclamo");
     }
 
-    const handleSelectEstado = estado => {
-        HandleSelectEstado({estado, setData, dataInicial, setEstadoReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, edificioReclamo, nroReclamoDefault});
-    }
+    // const handleSelectEstado = estado => {
+    //     HandleSelectEstado({estado, setData, dataInicial, setEstadoReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, edificioReclamo, nroReclamoDefault});
+    // }
 
-    const handleSelectEdificio = edificio => {
-        HandleSelectEdificio({edificio, setData, dataInicial, setEdificioReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, estadoReclamo, nroReclamoDefault});
-    }
+    // const handleSelectEdificio = edificio => {
+    //     HandleSelectEdificio({edificio, setData, dataInicial, setEdificioReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, estadoReclamo, nroReclamoDefault});
+    // }
 
-    const handleInputBuscador = nroReclamo => {
-        HandleInputBuscador({nroReclamo, setData, dataInicial, setEstadoReclamo, setEdificioReclamo, setNroReclamo, opcionDefaultEstados, opcionDefaultEdificios});
-    }
+    // const handleInputBuscador = nroReclamo => {
+    //     HandleInputBuscador({nroReclamo, setData, dataInicial, setEstadoReclamo, setEdificioReclamo, setNroReclamo, opcionDefaultEstados, opcionDefaultEdificios});
+    // }
     
     return(
         <div className="principal">
@@ -72,7 +72,7 @@ export default function MisReclamos(props) {
             <section className="reclamos">
                 <div className="filtros">
                 <Button variant="primary" className="button-new-reclamo" onClick={nuevoReclamo}>Nuevo reclamo</Button>
-                    <Buscador nroReclamo={nroReclamo} handleInput={nroReclamo => handleInputBuscador(nroReclamo)}/>
+                    {/* <Buscador nroReclamo={nroReclamo} handleInput={nroReclamo => handleInputBuscador(nroReclamo)}/>
                     <div className="drop-estados">
                         <h6 className="titulos-filtros">Estados</h6>
                         <Drops opcionActual={estadoReclamo} opcionDefault={opcionDefaultEstados} drop={"estados"} user={usuario} handleSelect={estado => handleSelectEstado(estado)}/>
@@ -80,7 +80,7 @@ export default function MisReclamos(props) {
                     <div className="drop-edificios">
                         <h6 className="titulos-filtros">Edificios</h6>
                         <Drops opcionActual={edificioReclamo} opcionDefault={opcionDefaultEdificios} drop={"edificios"} user={usuario} handleSelect={edificio => handleSelectEdificio(edificio)}/>
-                    </div>
+                    </div> */}
                 </div>
                 {data.length >= 1 ? 
                     <ListReclamos data={data} esAdmin={false} misReclamos={true}/>

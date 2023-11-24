@@ -1,6 +1,6 @@
 import "./header.css"
-import { Link, useResolvedPath, useMatch, useLocation, matchPath } from 'react-router-dom'
-import PersonasAdmin from "../../pages/PersonasAdmin";
+import { Link, useResolvedPath, useMatch } from 'react-router-dom'
+
 import { useContext } from "react";
 import { UserAuthenticatedContext } from "../../App"
 import Button from "react-bootstrap/Button";
@@ -26,7 +26,7 @@ function NavBarAdmin({cerrarSesionCallback}){
             <ul className="nav-container">
                 <CustomLink route="/reclamos" text="Reclamos"/>
                 <CustomLink route="/edificios" text="Edificios"/>
-                <CustomLink route="/personas" text="Personas" element={<PersonasAdmin />}/>
+                <CustomLink route="/personas" text="Personas"/>
             </ul>
             <Button variant="primary" className="cerrar-sesion" onClick={cerrarSesionCallback}>Cerrar sesión</Button>
         </nav>       
@@ -38,7 +38,6 @@ function NavBarGuest({cerrarSesionCallback}){
         <nav>
             <ul className="nav-container">
                 <CustomLink route="/misReclamos" text="Mis reclamos"/>
-                <CustomLink route="/edificioReclamos" text="Reclamos en mis edificios"/>
             </ul>
             <Button variant="primary" className="cerrar-sesion" onClick={cerrarSesionCallback}>Cerrar sesión</Button>
         </nav>

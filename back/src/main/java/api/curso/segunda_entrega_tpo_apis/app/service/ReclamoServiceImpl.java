@@ -36,7 +36,6 @@ public class ReclamoServiceImpl implements IReclamoService {
 	public void update(int reclamoId, Reclamo reclamo) {
 		Reclamo reclamoExistente = reclamosDAO.findById(reclamoId);
 		if(reclamoExistente != null) {
-			reclamoExistente.setUsuario(reclamo.getUsuario());
 			reclamoExistente.setUnidad(reclamo.getUnidad());
 			reclamoExistente.setAreaComun(reclamo.getAreaComun());
 			reclamoExistente.setDescripcion(reclamo.getDescripcion());
