@@ -58,8 +58,9 @@ export default function NuevaUnidad(){
                             "id": e.target.edificio.value  // Reemplaza con el ID de un edificio existente
                         }
                         }
+                    console.log(form)
             // Ejecutamos el fetch
-            axios.post("http://localhost:8080/tpo_apis/edificios", JSON.stringify(form), 
+            axios.post("http://localhost:8080/tpo_apis/unidades", JSON.stringify(form), 
                 {
                     headers: { 
                         'Content-Type': 'application/json;charset=UTF-8',

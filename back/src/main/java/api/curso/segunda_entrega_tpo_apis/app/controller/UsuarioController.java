@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -118,7 +119,9 @@ public class UsuarioController {
 	private Usuario convertToEntity(UsuarioDTO usuarioDTO) {
 		Usuario usuario = new Usuario();
 		usuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
-		usuario.setContrasenia(usuarioDTO.getContrasenia());
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(usuarioDTO.getContrasenia());
+		usuario.setContrasenia(hashedPassword);
 		usuario.setRolUsuario(usuarioDTO.getRolUsuario());
 		usuario.setId(usuarioDTO.getId());
 		return usuario;

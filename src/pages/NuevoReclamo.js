@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import "../styles/NuevoReclamo.css";
 import "../styles/cards.css";
 import React, { useContext, useEffect, useState } from "react";
@@ -12,19 +13,15 @@ import { Loader } from "@mantine/core";
 export default function NuevoReclamo(){
     const [loading, setLoading] = useState(false);
     const [edificiosHabilitados, setEdificiosHabilitados] = useState([]);
-    const [unidadesHabilitadas, setUnidadesHabilitadas] = useState([]);
     const [edificioSeleccionado, setEdificioSeleccionado] = useState();
+    const [areasComunes, setAreasComunes] = useState([]);
     const [unidades, setUnidades] = useState([]);
 
-    const archivosURL = [];
     const navigate = useNavigate();
 
-    const documentoUsuario = useContext(UserDocumentContext);
-    const usuario = useContext(UserContext)
     const bearer = useContext(UserBearer);
     const id = useContext(UserDocumentContext)
     const role = useContext(UserRoleContext)
-    console.log(id)
     useEffect(() => {
         axios.get(`http://localhost:8080/tpo_apis/edificios`, {
             headers: {
@@ -34,55 +31,99 @@ export default function NuevoReclamo(){
             console.log(response.data)
             setEdificiosHabilitados(response.data);
         }).catch(e => console.log(e))
+        // axios.get(`http://localhost:8080/tpo_apis/areasComunes`, {
+        //     headers: {
+        //         Authorization: `Bearer ${bearer}`
+        //     }}).then((response) => {
+        //         console.log(response.data)
+        //         setAreasComunes(response.data);
+        //     }).catch(e => console.log(e))
     }, []);
 
     useEffect(() => {
-        console.log(edificioSeleccionado)
     if (edificioSeleccionado) {
         // Asegúrate de que edificioSeleccionado es convertido al tipo correcto.
 // Si edificioSeleccionado es un string, conviértelo a número.
-const idSeleccionado = Number(edificioSeleccionado);
-
-const edificio = edificiosHabilitados.find(edificio => edificio.id === idSeleccionado);
-console.log(edificio);
-
-    
+    const idSeleccionado = Number(edificioSeleccionado);
+    const edificio = edificiosHabilitados.find(edificio => edificio.id === idSeleccionado);
+        console.log(edificio)
         if(edificio.unidades && edificio.unidades.length > 0){
 
             console.log("Entro")
             const unidadesPorUsuario = edificio.unidades.filter(unidad =>
                 unidad.duenio.id === id || (unidad.inquilino && unidad.inquilino.id === id)
                 );
-                console.log(unidadesPorUsuario)
                 setUnidades(unidadesPorUsuario);
-            }
+            
         
     } else {
         // Si no hay unidades, establecer unidadesFiltradas como un array vacío.
         setUnidades([]);
     }
+    if(edificio.areasComunes && edificio.areasComunes.length > 0){
 
-}, [edificioSeleccionado, id]);
+            setAreasComunes(edificio.areasComunes);
+
+    } else {
+        // Si no hay unidades, establecer unidadesFiltradas como un array vacío.
+        setAreasComunes([]);
+    }
+
+}}, [edificioSeleccionado, id]);
 
 
-    function sendNuevoReclamo(e){
+    const sendNuevoReclamo = async (e) => {
         e.preventDefault();
         // Subimos imagenes a Cloudinary
-        const files = e.target.imagen.files;
-        console.log(files["0"])
-            const form = {
-                "usuario":id,
-                "unidad": null,
-                "areaComun": null,
-                "descripcion": "Descripción de mi reclamo",
-                "edificio":null,
-                "estado": "ANULADO",
-                "fotos": null,
-                "fechaCreacion": "2023-10-31T08:00:00",
-                "fechaModificacion": "2023-11-31T08:00:00"
-            }
+        const files = e.target.imagen.files[0];
+        
+        const date = new Date();
+        let form;
+        let valor = e.target.unidad.value;
+        let esUnidad = valor.startsWith('unidad-');
+        let esComun = valor.startsWith('comun-');
 
-            // Ejecutamos el fetch
+
+if(esUnidad) {
+    form = {
+        "usuario": id,
+        "unidad": Number(valor.split('-')[1]), // Obtiene el XXXX de "unidad-XXX"
+        "areaComun": null,
+        "descripcion": e.target.descripcion.value,
+        "edificio": e.target.edificio.value,
+        "estado": "ABIERTO",
+        "fotos": null,
+        "fechaCreacion": date,
+        "fechaModificacion": date
+    };
+} else if(esComun) {
+    
+    form = {
+        "usuario": id,
+        "unidad": null,
+        "areaComun": Number(valor.split('-')[1]), // Obtiene el XXXX de "comun-XXXX"
+        "descripcion": e.target.descripcion.value,
+        "edificio": e.target.edificio.value,
+        "estado": "ABIERTO",
+        "fotos": null,
+        "fechaCreacion": date,
+        "fechaModificacion": date
+    };
+}
+
+form = {
+    
+    "usuario":4,
+  "unidad": null,
+  "areaComun": null,
+  "descripcion": "Descripción de mi reclamo",
+  "edificio":null,
+  "estado": "ABIERTO",
+  "fotos": null,
+  "fechaCreacion": "2023-10-31T08:00:00",
+  "fechaModificacion": "2023-11-31T08:00:00"
+
+}
             axios.post("http://localhost:8080/tpo_apis/reclamos", JSON.stringify(form), 
                 {
                     headers: { 
@@ -92,15 +133,18 @@ console.log(edificio);
 
                 })
                 .then((e) => {
-                    // Si fue exitosa mostramos un PopUp de exito
-                    console.log(e.data)
-                    SuccessPopUp('Reclamo creado con éxito!',`Tu número de reclamo: ${e.data}`)
-                    .then(() => navigate('/misreclamos')) // Redirigimos a Mis Reclamos
+                    const formData = new FormData();
+                    formData.append("archivo", files);
+                    formData.append("reclamoId", e.data.id);
+                    axios.post("http://localhost:8080/imagenes/subir", formData ,{headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${bearer}`
+        }})
                 })
                 .catch(() => {
-                    // Si la peticion ha fallado, mostramos un PopUp de error
                     ErrorPopUp("No se ha podido crear el reclamo", "Inténtelo nuevamente mas tarde")
                 })
+                
             
         } 
     
@@ -139,18 +183,18 @@ console.log(edificio);
                         <Form.Group className="nuevoReclamo-form-group">
                             <Form.Label className="nuevoReclamo-form-group-label">Unidad:</Form.Label>
                             <Form.Select className="nuevoReclamo-form-group-input" name="unidad">
-                                <option value="-1">Area común</option>
+                                <option value="-1"></option>
                                 {role && (role === "inquilino" || role === "duenio")
                                 ? unidades.map((unidad) => 
-                                     <option key={unidad.id} value={unidad.id} name="unidad">Piso: {unidad.piso}, Unidad: {unidad.nroUnidad}</option>
+                                     <option key={unidad.idUnidad} value={`unidad-${unidad}`} name="unidad">Piso: {unidad.piso}, Unidad: {unidad.nroUnidad}</option>
                                     )
                                 : null
                                 }
+                                {areasComunes && areasComunes.length > 0 ? areasComunes.map((areaComun) =>
+                                        <option key={areaComun.idAreaComun} value={`comun-${areaComun}`} name="unidad">Nombre: {areaComun.nombre} - Piso: {areaComun.piso}</option>
+                                         ) :null    
+                            }
                             </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="nuevoReclamo-form-group">
-                            <Form.Label className="nuevoReclamo-form-group-label">Ubicación:</Form.Label>
-                            <Form.Control type="text" name="ubicacion" className="nuevoReclamo-form-group-input" required/>
                         </Form.Group>
                         <Form.Group className="nuevoReclamo-form-group">
                             <Form.Label className="nuevoReclamo-form-group-label">Descripción:</Form.Label>

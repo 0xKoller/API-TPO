@@ -31,7 +31,7 @@ export default function NuevoEdificio(){
                 "areasComunes": [],
                 "unidades": []
                 }
-
+                console.log(form)
             // Ejecutamos el fetch
             axios.post("http://localhost:8080/tpo_apis/edificios", JSON.stringify(form), 
                 {

@@ -1,6 +1,7 @@
 package api.curso.segunda_entrega_tpo_apis.app.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,14 +73,13 @@ public class ReclamoController {
 	}
 		
 	@PostMapping("/reclamos")
-	public ResponseEntity<ReclamoDTO> addReclamo(@RequestBody ReclamoDTO reclamoDTO) {
+	public ResponseEntity<?> addReclamo(@RequestBody ReclamoDTO reclamoDTO) {
 
 	    Reclamo reclamo = convertToEntity(reclamoDTO);
         System.out.println(reclamo);
 	    // Guarda el reclamo
 	    reclamoService.save(reclamo);
-
-	    return new ResponseEntity<>(reclamoDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap("id", reclamo.getId()), HttpStatus.CREATED);
 	}
 
 	

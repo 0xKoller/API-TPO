@@ -31,6 +31,8 @@ public class ImagenController {
 
     @PostMapping("/subir")
     public ResponseEntity<String> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("reclamoId") int reclamoId) {
+        System.out.println(archivo);
+        System.out.println(reclamoId);
         try {
             Reclamo reclamo = reclamoService.findById(reclamoId);
             if (reclamo != null) {
@@ -38,6 +40,7 @@ public class ImagenController {
                 imagen.setReclamo(reclamo);
                 imagen.setDatosImagen(archivo.getBytes());
                 imagenService.save(imagen);
+
                 return ResponseEntity.ok("Imagen subida exitosamente.");
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Reclamo no encontrado.");
