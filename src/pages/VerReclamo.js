@@ -8,6 +8,7 @@ import NavigateBackButton from "../components/navigateBack/NavigateBackButton";
 import "../styles/cards.css";
 import { UserBearer, UserRoleContext } from "../App";
 import axios from 'axios';
+import { SuccessPopUp } from '../components/SwalPopUps/SwalPopUps';
 
 export default function VerReclamo () {
     const {nroReclamo} = useParams();
@@ -35,7 +36,7 @@ export default function VerReclamo () {
     }, []);
 
     function redirectToHome(){
-        navigate(userRoleContext==="administrador"? "/reclamos": "/misReclamos");
+        navigate(userRoleContext==="empleado"? "/reclamos": "/misReclamos");
     }
 
     const handleUpdate = async (e) => {
@@ -76,7 +77,8 @@ export default function VerReclamo () {
                 }
             }
         ).then((response) => {
-            console.log(response.data)
+            SuccessPopUp("Reclamo modificado con éxito!")
+            .then(() => navigate("/reclamos"))
     }).catch((e) => console.log(e))
 }
 
@@ -104,29 +106,28 @@ export default function VerReclamo () {
                 <h1 className="reclamo-titulo">Reclamo #{reclamo.id}</h1>
                 <Form 
                 onSubmit={handleUpdate}
+                className='d-flex flex-column justify-content-center '
                 >
-                    <Form.Group className="reclamo-form-group">
-                        <Form.Label className="reclamo-form-group-label">Edificio:</Form.Label>
-                        <Form.Label className="reclamo-form-group-label-answer">{reclamo.edificio}</Form.Label>
+                    <Form.Group className='d-flex flex-row m-1 justify-content-center  '>
+                        <Form.Label className="reclamo-form-group-label text-end mx-2 w-100">Edificio:</Form.Label>
+                        <Form.Label className="reclamo-form-group-label-answer text-start mx-2 w-100">{reclamo.edificio}</Form.Label>
                     </Form.Group>
-                    {/* <Form.Group className="reclamo-form-group">
-                        <Form.Label className="reclamo-form-group-label">Unidad:</Form.Label>
-                        {reclamo.unidad !== null 
-                        ? <Form.Label className="reclamo-form-group-label-answer"> {reclamo.unidad.numero}</Form.Label>
-                        : <Form.Label className="reclamo-form-group-label-answer">{reclamo.ubicacion}</Form.Label>
-                        }                        
-                    </Form.Group> */}
-                    <Form.Group className="reclamo-form-group">
-                        <Form.Label className="reclamo-form-group-label">Imagen:</Form.Label>
-                         {reclamo.fotos && reclamo.fotos.map((foto, index) => (
-                    <img key={index} src={`data:image/jpeg;base64,${foto.datosImagen}`} alt={`Imagen del reclamo ${index}`} />
-                ))}
+                    
+                    <Form.Group className='d-flex flex-column m-1 justify-content-center ' >
+                        <Form.Label className="reclamo-form-group-label text-center w-100">Imagen</Form.Label>
+                         {reclamo.fotos && reclamo.fotos.length > 0 ? reclamo.fotos.map((foto, index) => (
+                    <div className='d-flex flex-row justify-content-center'>
+                    <img key={index} src={`data:image/jpeg;base64,${foto.datosImagen}`} alt={`Imagen del reclamo ${index}`} className=' w-50 ' />
+                </div>
+                    )) :
+                            <p>Este reclamo no posee imagenes</p>
+                }
                     </Form.Group>
-                    <Form.Group className="reclamo-form-group">
-                        <Form.Label className="reclamo-form-group-label">Descripcion:</Form.Label>
+                    <Form.Group className='d-flex flex-column m-1'>
+                        <Form.Label className="reclamo-form-group-label">Descripcion</Form.Label>
                         <Form.Label className="reclamo-form-group-label-answer">{reclamo.descripcion}</Form.Label>
                     </Form.Group>
-                    <Form.Group className="reclamo-form-group">
+                    <Form.Group className='d-flex flex-row m-1'>
                         <Form.Label className="reclamo-form-group-label">Estado:</Form.Label>
                         <Form.Select className="nuevoReclamo-form-group-input" name="unidad">
                                 <option value={reclamo.estado}>{reclamo.estado}</option>
@@ -137,16 +138,11 @@ export default function VerReclamo () {
                                 })}
                                 </Form.Select>
                     </Form.Group>
-                    
-                   
-                    {/* <Form.Group className="reclamo-form-group-lista">
-                        <Form.Label className="reclamo-form-group-labelImagenes">Imagenes:</Form.Label>
-                        {reclamo.imagenes && reclamo.imagenes.length < 1 ? <Form.Label className="reclamo-form-group-label-notfound">No hay imágenes por el momento</Form.Label>
-                        : reclamo.imagenes.map((imagen) => (<img className="reclamo-imagenes" key={imagen.direccion} src={imagen.direccion} alt=""></img>))}           
-                    </Form.Group> */}
+                    {userRoleContext === "empleado" ?
                     <div className="text-center mt-5 btns-div">
                         <Button type='submit' variant="primary" className="card-cancel-button">Modificar</Button>    
-                    </div>
+                    </div>: null    
+                }
                     <div className="text-center mt-5 btns-div">
                         <Button variant="primary" className="card-cancel-button" onClick={redirectToHome}>Volver atrás</Button>    
                     </div>

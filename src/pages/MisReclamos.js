@@ -6,9 +6,10 @@ import ListReclamos from "../components/reclamos/tablaReclamos";
 import Drops from "../components/dropdowns/dropdown";
 import Buscador from "../components/buscador/searchReclamo";
 import { useNavigate } from "react-router-dom";
-import { UserContext, UserDocumentContext } from "../App";
+import { UserBearer, UserContext, UserDocumentContext } from "../App";
 import { HandleSelectEdificio, HandleSelectEstado, HandleInputBuscador } from "../components/reclamos/FuncionesReclamos";
 import { Button } from "react-bootstrap";
+import axios from 'axios';
 
 
 export default function MisReclamos(props) {
@@ -18,22 +19,26 @@ export default function MisReclamos(props) {
     const [dataInicial, setDataInicial] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const opcionDefaultEstados = "-- Elija un estado --";
-    const opcionDefaultEdificios = "-- Elija un edificio --";
-    const nroReclamoDefault = "";
+    const bearer = useContext(UserBearer)
+    console.log(userDoc)
     // const [estadoReclamo, setEstadoReclamo] = useState(opcionDefaultEstados);
     // const [edificioReclamo, setEdificioReclamo] = useState(opcionDefaultEdificios);
     // const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
 
-    // useEffect(() => {
-    //     fetch(`http://localhost:8080/api/reclamos/reclamosPorPersona/${userDoc}/misReclamos`)
-    //     .then((response) => response.json())
-    //     .then((d) => {
-    //         setData(d);
-    //         setDataInicial(d);
-    //     }).catch(e => console.log(e))
-    //     .finally(() => setLoading(false));
-    // }, []);
+    useEffect(() => {
+        axios.get(`http://localhost:8080/tpo_apis/reclamos`, {
+            headers: {
+                Authorization: `Bearer ${bearer}`
+            }
+        }).then((response) => {
+            console.log(response.data)
+            const reclamos = response.data.filter(reclamo => reclamo.usuario === userDoc);
+            setData(reclamos);
+            console.log(data)
+        })
+        .catch(e => console.log(e))
+        
+    }, []);
 
     if (loading) {
         return (
@@ -82,10 +87,20 @@ export default function MisReclamos(props) {
                         <Drops opcionActual={edificioReclamo} opcionDefault={opcionDefaultEdificios} drop={"edificios"} user={usuario} handleSelect={edificio => handleSelectEdificio(edificio)}/>
                     </div> */}
                 </div>
-                {data.length >= 1 ? 
-                    <ListReclamos data={data} esAdmin={false} misReclamos={true}/>
-                    : <h4 className="mensaje-error">No existen reclamos con las especificaciones brindadas</h4>
-                }
+                {data && data.length > 0 ? 
+                    data.map((reclamo) => 
+                        <div key={reclamo.id} className='card d-flex flex-row justify-content-evenly m-2 p-2'>
+                            <p>Reclamo N#{reclamo.id}</p>
+                            <p>Edificio: {reclamo.edificio}</p>
+                            {reclamo.unidad ? <p>Unidad: {reclamo.unidad}</p> : <p>Area Comun: {reclamo.areaComun}</p>}
+                            <p>Estado: {reclamo.estado}</p>
+                            <button className="btn btn-primary" onClick={() => navigate(`/reclamos/${reclamo.id}`)}>Ver Reclamo</button>
+                        </div>
+                    )
+                    :
+                    <div className="no-reclamos">
+                        <h1>No hay reclamos</h1>
+                    </div>}
             </section>
         </div>
     );

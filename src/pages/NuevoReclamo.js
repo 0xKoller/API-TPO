@@ -128,6 +128,9 @@ console.log(form)
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${bearer}`
         }})
+                }).then(() => {
+                     SuccessPopUp('Reclamo creado con éxito!').then(() => navigate(role==="empleado" ? "/reclamos" : "/misreclamos")) // Redirigimos a Mis Reclamos
+                    
                 })
                 .catch(() => {
                     ErrorPopUp("No se ha podido crear el reclamo", "Inténtelo nuevamente mas tarde")
