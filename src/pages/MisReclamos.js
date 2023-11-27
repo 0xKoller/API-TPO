@@ -2,28 +2,18 @@ import "../styles/HomeAdmin.css";
 import "../styles/AdminPages.css";
 import { useContext, useEffect, useState } from "react";
 import { Loader } from "@mantine/core";
-import ListReclamos from "../components/reclamos/tablaReclamos";
-import Drops from "../components/dropdowns/dropdown";
-import Buscador from "../components/buscador/searchReclamo";
 import { useNavigate } from "react-router-dom";
-import { UserBearer, UserContext, UserDocumentContext } from "../App";
-import { HandleSelectEdificio, HandleSelectEstado, HandleInputBuscador } from "../components/reclamos/FuncionesReclamos";
+import { UserBearer, UserDocumentContext } from "../App";
 import { Button } from "react-bootstrap";
 import axios from 'axios';
 
 
 export default function MisReclamos(props) {
-    const usuario = useContext(UserContext);
     const userDoc = useContext(UserDocumentContext);
     const [data, setData] = useState([]);
-    const [dataInicial, setDataInicial] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const bearer = useContext(UserBearer)
-    console.log(userDoc)
-    // const [estadoReclamo, setEstadoReclamo] = useState(opcionDefaultEstados);
-    // const [edificioReclamo, setEdificioReclamo] = useState(opcionDefaultEdificios);
-    // const [nroReclamo, setNroReclamo] = useState(nroReclamoDefault);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/tpo_apis/reclamos`, {
@@ -31,10 +21,8 @@ export default function MisReclamos(props) {
                 Authorization: `Bearer ${bearer}`
             }
         }).then((response) => {
-            console.log(response.data)
             const reclamos = response.data.filter(reclamo => reclamo.usuario === userDoc);
             setData(reclamos);
-            console.log(data)
         })
         .catch(e => console.log(e))
         
@@ -54,18 +42,6 @@ export default function MisReclamos(props) {
     const nuevoReclamo = () => {
         navigate("../nuevoreclamo");
     }
-
-    // const handleSelectEstado = estado => {
-    //     HandleSelectEstado({estado, setData, dataInicial, setEstadoReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, edificioReclamo, nroReclamoDefault});
-    // }
-
-    // const handleSelectEdificio = edificio => {
-    //     HandleSelectEdificio({edificio, setData, dataInicial, setEdificioReclamo, setNroReclamo, opcionDefaultEdificios, opcionDefaultEstados, estadoReclamo, nroReclamoDefault});
-    // }
-
-    // const handleInputBuscador = nroReclamo => {
-    //     HandleInputBuscador({nroReclamo, setData, dataInicial, setEstadoReclamo, setEdificioReclamo, setNroReclamo, opcionDefaultEstados, opcionDefaultEdificios});
-    // }
     
     return(
         <div className="principal">
@@ -77,23 +53,15 @@ export default function MisReclamos(props) {
             <section className="reclamos">
                 <div className="filtros">
                 <Button variant="primary" className="button-new-reclamo" onClick={nuevoReclamo}>Nuevo reclamo</Button>
-                    {/* <Buscador nroReclamo={nroReclamo} handleInput={nroReclamo => handleInputBuscador(nroReclamo)}/>
-                    <div className="drop-estados">
-                        <h6 className="titulos-filtros">Estados</h6>
-                        <Drops opcionActual={estadoReclamo} opcionDefault={opcionDefaultEstados} drop={"estados"} user={usuario} handleSelect={estado => handleSelectEstado(estado)}/>
-                    </div>
-                    <div className="drop-edificios">
-                        <h6 className="titulos-filtros">Edificios</h6>
-                        <Drops opcionActual={edificioReclamo} opcionDefault={opcionDefaultEdificios} drop={"edificios"} user={usuario} handleSelect={edificio => handleSelectEdificio(edificio)}/>
-                    </div> */}
+                    
                 </div>
                 {data && data.length > 0 ? 
                     data.map((reclamo) => 
                         <div key={reclamo.id} className='card d-flex flex-row justify-content-evenly m-2 p-2'>
-                            <p>Reclamo N#{reclamo.id}</p>
-                            <p>Edificio: {reclamo.edificio}</p>
-                            {reclamo.unidad ? <p>Unidad: {reclamo.unidad}</p> : <p>Area Comun: {reclamo.areaComun}</p>}
-                            <p>Estado: {reclamo.estado}</p>
+                            <p className='fw-bold'>Reclamo N#<span className='fw-normal'>{reclamo.id}</span></p>
+                            <p className='fw-bold'>Edificio: <span className='fw-normal'>{reclamo.edificio}</span></p>
+                            {reclamo.unidad ? <p className='fw-bold'>Unidad: <span className='fw-normal'>{reclamo.unidad}</span></p> : <p className='fw-bold'>Area Comun: <span className='fw-normal'>{reclamo.areaComun}</span></p>}
+                            <p className='fw-bold'>Estado: <span className='fw-normal'>{reclamo.estado}</span></p>
                             <button className="btn btn-primary" onClick={() => navigate(`/reclamos/${reclamo.id}`)}>Ver Reclamo</button>
                         </div>
                     )

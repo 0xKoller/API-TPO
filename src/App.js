@@ -6,15 +6,12 @@ import NotFound from "./pages/NotFound";
 import NuevoReclamo from "./pages/NuevoReclamo";
 import './App.css';
 import React, { useState } from "react";
-import Recupero from "./pages/Recupero";
-import EditarUnidades from "./pages/EditarUnidades";
 
 import EdificiosAdmin from "./pages/EdificiosAdmin";
 import UnidadesAdmin from "./pages/UnidadesAdmin";
 import VerReclamo from "./pages/VerReclamo";
 import Navbar from "./components/header/header";
 import MisReclamos from "./pages/MisReclamos";
-import ReclamosMisEdificios from "./pages/ReclamosMisEdificios";
 import NuevoEdificio from './pages/NuevoEdifico';
 import NuevaUnidad from './pages/NuevaUnidad';
 import NuevaAreaComun from './pages/NuevaAreaComun';
@@ -63,7 +60,6 @@ function App() {
           <UserBearer.Provider value={userBearer}>
           <Navbar isAdmin={true} cerrarSesionCallback={cerrarSesion}/>
           <Routes>
-            <Route path="/unidades/:idUnidad" element={<EditarUnidades />}/>
             <Route exact path="/reclamos" element={<HomeAdmin />}/>
             <Route exact path="/edificios" element={<EdificiosAdmin />}/>
             <Route exact path="/nuevoEdificio" element={<NuevoEdificio />}/>
@@ -93,7 +89,6 @@ function App() {
           <Navbar isAdmin={false} cerrarSesionCallback={cerrarSesion}/>
             <Routes>
               <Route exact path="/misReclamos" element={<MisReclamos cerrarSesion={cerrarSesion} />}/>
-              <Route exact path="/edificioReclamos" element={<ReclamosMisEdificios />}/>
               <Route exact path="/reclamos/:nroReclamo" element={<VerReclamo />}/>
               <Route path="/*" element={<NotFound />} />
               <Route exact path="/login" element={<Login />} />
@@ -111,7 +106,6 @@ function App() {
     //rutas usuario no autenticado
     return (
       <Routes>
-        <Route path="/recupero" element={<Recupero paginaLogin={paginaLogin} />} />
         <Route
           exact path={paginaLogin}
           element={

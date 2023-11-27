@@ -129,6 +129,7 @@ export default function VerReclamo () {
                     </Form.Group>
                     <Form.Group className='d-flex flex-row m-1'>
                         <Form.Label className="reclamo-form-group-label">Estado:</Form.Label>
+                        {userRoleContext === "empleado" ?
                         <Form.Select className="nuevoReclamo-form-group-input" name="unidad">
                                 <option value={reclamo.estado}>{reclamo.estado}</option>
                                 {options.map((option) => {
@@ -136,7 +137,9 @@ export default function VerReclamo () {
                                         return <option key={option} value={option}>{option}</option>
                                     }
                                 })}
-                                </Form.Select>
+                                </Form.Select> : 
+                                <Form.Label className="reclamo-form-group-label-answer">{reclamo.estado}</Form.Label>
+                                }
                     </Form.Group>
                     {userRoleContext === "empleado" ?
                     <div className="text-center mt-5 btns-div">

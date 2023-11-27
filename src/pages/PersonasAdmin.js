@@ -3,8 +3,6 @@ import "../styles/PersonasAdmin.css";
 import { useContext, useEffect, useState } from "react";
 import {UserBearer, UserContext, UserDocumentContext} from "../App";
 import { Loader } from "@mantine/core";
-import ListPersonas from "../components/personas/tablaPersonas";
-import Buscador from "../components/buscador/searchPersona";
 import Button from "react-bootstrap/Button";
 import { AltaPersonaPopUp, SuccessPopUp, ErrorPopUp } from "../components/SwalPopUps/SwalPopUps";
 import axios from "axios";

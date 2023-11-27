@@ -2,7 +2,6 @@ import "../styles/HomeAdmin.css";
 import "../styles/UnidadesAdmin.css";
 import { useContext, useEffect, useState } from "react";
 import { Loader } from "@mantine/core";
-import TablaUnidades from "../components/unidades/tablaUnidades";
 import { useParams } from "react-router-dom";
 import React from "react";
 import NavigateBackButton from "../components/navigateBack/NavigateBackButton"
