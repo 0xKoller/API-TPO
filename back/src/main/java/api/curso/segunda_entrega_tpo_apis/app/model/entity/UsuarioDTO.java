@@ -1,10 +1,13 @@
 package api.curso.segunda_entrega_tpo_apis.app.model.entity;
 
+import java.util.List;
+
 public class UsuarioDTO {
 	private String nombreUsuario;
 	private String contrasenia;
 	private RolUsuario rolUsuario;
 	private int id;
+	private List<Reclamo> reclamos;
 
 	public UsuarioDTO() {
 		super();
@@ -19,6 +22,16 @@ public class UsuarioDTO {
 		this.contrasenia = contrasenia;
 		this.rolUsuario = rolUsuario;
 		this.id = id;
+	}
+
+	
+	public UsuarioDTO(String nombreUsuario, String contrasenia, RolUsuario rolUsuario, int id, List<Reclamo> reclamos) {
+		super();
+		this.nombreUsuario = nombreUsuario;
+		this.contrasenia = contrasenia;
+		this.rolUsuario = rolUsuario;
+		this.id = id;
+		this.reclamos = reclamos;
 	}
 
 
@@ -52,4 +65,18 @@ public class UsuarioDTO {
 		return id;
 	}
 	public void setId(int id){this.id = id;}
+
+
+
+	public List<Reclamo> getReclamos() {
+		return reclamos;
+	}
+
+
+
+	public void setReclamos(List<Reclamo> reclamos) {
+		this.reclamos = reclamos;
+	}
+	
+	
 }

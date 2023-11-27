@@ -43,21 +43,37 @@ export default function NuevaUnidad(){
                 ErrorPopUp("Seleccione un duenio", "Vuelva a intentarlo")
                 return
                 }
-
-            const form ={
-                        "piso": e.target.piso.value,
-                        "nroUnidad": e.target.unidad.value,
+                let form;
+            if(e.target.inquilino.value === "null"){
+                 form ={
+                            "piso": Number(e.target.piso.value),
+                            "nroUnidad": Number(e.target.unidad.value),
+                            "estado": e.target.estado.value,  // Elige un estado válido de acuerdo a tu enum EstadoUnidad
+                            "duenio": {
+                                "id": Number(e.target.duenio.value)  // Reemplaza con el ID de un usuario existente
+                            },
+                            "inquilino": null  // Reemplaza con el ID de un usuario existente
+                            ,
+                            "edificio": {
+                                "id": Number(e.target.edificio.value)  // Reemplaza con el ID de un edificio existente
+                            }
+                            }
+            }else{
+                 form ={
+                        "piso": Number(e.target.piso.value),
+                        "nroUnidad": Number(e.target.unidad.value),
                         "estado": e.target.estado.value,  // Elige un estado válido de acuerdo a tu enum EstadoUnidad
                         "duenio": {
-                            "id": e.target.duenio.value  // Reemplaza con el ID de un usuario existente
+                            "id": Number(e.target.duenio.value)  // Reemplaza con el ID de un usuario existente
                         },
                         "inquilino": {
-                            "id": e.target.inquilino.value  // Reemplaza con el ID de un usuario existente
+                            "id": Number(e.target.inquilino.value)  // Reemplaza con el ID de un usuario existente
                         },
                         "edificio": {
-                            "id": e.target.edificio.value  // Reemplaza con el ID de un edificio existente
+                            "id": Number(e.target.edificio.value)  // Reemplaza con el ID de un edificio existente
                         }
                         }
+            }
                     console.log(form)
             // Ejecutamos el fetch
             axios.post("http://localhost:8080/tpo_apis/unidades", JSON.stringify(form), 

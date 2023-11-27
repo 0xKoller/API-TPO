@@ -16,8 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IAreaComunDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IReclamoDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IUnidadDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.AreaComun;
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.Edificio;
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.EdificioDTO;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.Reclamo;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.Unidad;
 import api.curso.segunda_entrega_tpo_apis.app.service.IEdificioService;
 
 
@@ -27,6 +33,15 @@ public class EdificioController {
 	
 	@Autowired
 	private IEdificioService edificioService;
+	
+	@Autowired
+	private IAreaComunDAO areaComunDAO;
+	
+	@Autowired 
+	private IUnidadDAO unidadDAO;
+	
+	@Autowired 
+	private IReclamoDAO reclamoDAO;
 	
 	
 	@GetMapping("/edificios")
@@ -109,16 +124,19 @@ public class EdificioController {
 	            edificio.getCreateAt(),
 	            edificio.getAreasComunes(),
 	            edificio.getUnidades(),
+	            edificio.getReclamos(),
 					edificio.getId()
 	        );
 	    }
 	 private Edificio convertToEntity(EdificioDTO edificioDTO) {
+
 	        Edificio edificio = new Edificio();
 	        edificio.setNombre(edificioDTO.getNombre());
 	        edificio.setDireccion(edificioDTO.getDireccion());
 	        edificio.setCreateAt(edificioDTO.getCreateAt());
 	        edificio.setAreasComunes(edificioDTO.getAreasComunes());
 	        edificio.setUnidades(edificioDTO.getUnidades());
+	        edificio.setReclamos(edificioDTO.getReclamos());
 	        return edificio;
 	    }
 	 private List<EdificioDTO> convertToDTOs(List<Edificio> edificios) {

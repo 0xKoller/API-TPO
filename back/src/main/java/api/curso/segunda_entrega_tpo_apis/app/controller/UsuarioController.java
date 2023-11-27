@@ -70,7 +70,7 @@ public class UsuarioController {
 	@PostMapping("/usuarios")
 	public ResponseEntity<UsuarioDTO> addUsuario(@RequestBody UsuarioDTO usuarioDTO) {
 		Usuario usuario = convertToEntity(usuarioDTO);
-		
+
 		usuarioService.save(usuario);
 
 		UsuarioDTO nuevoUsuarioDTO = convertToDTO(usuario);
@@ -89,7 +89,7 @@ public class UsuarioController {
 		}
 
 		Usuario usuarioToUpdate = convertToEntity(usuarioDTO);
-		
+
 		usuarioService.update(usuarioId, usuarioToUpdate);
 
 		UsuarioDTO usuarioUpdatedDTO = convertToDTO(usuarioToUpdate);
@@ -112,7 +112,8 @@ public class UsuarioController {
 	}
 
 	private UsuarioDTO convertToDTO(Usuario usuario) {
-		UsuarioDTO usuarioDTO = new UsuarioDTO(usuario.getNombreUsuario(), usuario.getContrasenia(), usuario.getRolUsuario(), usuario.getId());
+		UsuarioDTO usuarioDTO = new UsuarioDTO(usuario.getNombreUsuario(), usuario.getContrasenia(),
+				usuario.getRolUsuario(), usuario.getId(), usuario.getReclamos());
 		return usuarioDTO;
 	}
 
@@ -124,6 +125,7 @@ public class UsuarioController {
 		usuario.setContrasenia(hashedPassword);
 		usuario.setRolUsuario(usuarioDTO.getRolUsuario());
 		usuario.setId(usuarioDTO.getId());
+		usuario.setReclamos(usuarioDTO.getReclamos());
 		return usuario;
 	}
 }

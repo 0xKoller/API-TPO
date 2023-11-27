@@ -27,11 +27,14 @@ public class Edificio {
 	private Direccion direccion;
 	private Date createAt;
 	@OneToMany(mappedBy = "edificio", cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference("edificio-areaComun")
 	private List<AreaComun> areasComunes;
 	@OneToMany(mappedBy = "edificio", cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference("edificio-unidad")
 	private List<Unidad> unidades;
+	@OneToMany(mappedBy = "edificio", cascade = CascadeType.ALL)
+	@JsonManagedReference("edificio-reclamo")
+	private List<Reclamo> reclamos;
 
 	public Edificio() {
 		super();
@@ -42,6 +45,17 @@ public class Edificio {
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.createAt = createAt;
+	}
+
+	public Edificio(String nombre, Direccion direccion, Date createAt, List<AreaComun> areasComunes,
+			List<Unidad> unidades, List<Reclamo> reclamos) {
+		super();
+		this.nombre = nombre;
+		this.direccion = direccion;
+		this.createAt = createAt;
+		this.areasComunes = areasComunes;
+		this.unidades = unidades;
+		this.reclamos = reclamos;
 	}
 
 	public Edificio(String nombre, Direccion direccion, Date createAt, List<AreaComun> areasComunes,
@@ -103,13 +117,23 @@ public class Edificio {
 	public void setUnidades(List<Unidad> unidades) {
 		this.unidades = unidades;
 	}
+	
+
+	public List<Reclamo> getReclamos() {
+		return reclamos;
+	}
+
+	public void setReclamos(List<Reclamo> reclamos) {
+		this.reclamos = reclamos;
+	}
 
 	@Override
 	public String toString() {
 		return "Edificio [id=" + id + ", nombre=" + nombre + ", direccion=" + direccion + ", createAt=" + createAt
-				+ ", areasComunes=" + areasComunes + ", unidades=" + unidades + "]";
+				+ ", areasComunes=" + areasComunes + ", unidades=" + unidades + ", reclamos=" + reclamos + "]";
 	}
 
+	
 	
 
 }

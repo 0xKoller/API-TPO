@@ -1,5 +1,6 @@
 package api.curso.segunda_entrega_tpo_apis.app.model.dao;
 
+import java.util.Collections;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -26,6 +27,19 @@ public class EdificioDAOImpl implements IEdificioDAO {
 		
 		return edificios;
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Edificio> findByIds(List<Integer> ids) {
+	    if (ids == null || ids.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+	    Session currentSession = entityManager.unwrap(Session.class);
+	    Query<Edificio> query = currentSession.createQuery("from Edificio where id in (:ids)", Edificio.class);
+	    query.setParameter("ids", ids);
+	    return query.getResultList();
+	}
+
 
 	@Override
 	@Transactional(readOnly = true)

@@ -19,9 +19,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IAreaComunDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IEdificioDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IUnidadDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.dao.IUsuarioDAO;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.AreaComun;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.Edificio;
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.Reclamo;
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.ReclamoDTO;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.Unidad;
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.Usuario;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.UsuarioDTO;
 import api.curso.segunda_entrega_tpo_apis.app.service.IAreaComunService;
 import api.curso.segunda_entrega_tpo_apis.app.service.IReclamoService;
 import api.curso.segunda_entrega_tpo_apis.app.service.IUnidadService;
@@ -34,9 +42,20 @@ public class ReclamoController {
 	
 	@Autowired
 	private IReclamoService reclamoService;
-    @Autowired
-    private IUsuarioService usuarioService;
+	
+	@Autowired
+	private IUnidadDAO unidadDAO;
 
+	@Autowired
+	private IAreaComunDAO areaComunDAO;
+
+	@Autowired
+	private IEdificioDAO edificioDAO;
+	
+	@Autowired
+	private IUsuarioDAO usuarioDAO;
+
+    
 
 	@GetMapping("/reclamos")
 	public List<ReclamoDTO> findAll(){
@@ -79,16 +98,29 @@ public class ReclamoController {
         System.out.println(reclamo);
 	    // Guarda el reclamo
 	    reclamoService.save(reclamo);
+
+
         return new ResponseEntity<>(Collections.singletonMap("id", reclamo.getId()), HttpStatus.CREATED);
 	}
 
 	
 	@PutMapping("/reclamos/{reclamoId}")
 	public ResponseEntity<?> updateReclamo(@PathVariable int reclamoId, @RequestBody ReclamoDTO reclamoDTO) {
-        Reclamo reclamo = convertToEntity(reclamoDTO);
-        reclamoService.save(reclamo);
+		Reclamo reclamoOld = reclamoService.findById(reclamoId);
 
-        return new ResponseEntity<>(reclamoDTO, HttpStatus.CREATED);
+
+		if (reclamoOld == null) {
+			String mensaje = "Reclamo no encontrado con ID: " + reclamoId;
+			return new ResponseEntity<>(mensaje, HttpStatus.NOT_FOUND);
+		}
+		
+		Reclamo reclamoToUpdate = convertToEntity(reclamoDTO);
+
+		reclamoService.update(reclamoId, reclamoToUpdate);
+		
+		ReclamoDTO reclamoUpdatedDTO = convertToDTO(reclamoToUpdate);
+
+        return new ResponseEntity<>(Collections.singletonMap("id", reclamoUpdatedDTO.getId()), HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/reclamos/{reclamoId}")
@@ -106,33 +138,47 @@ public class ReclamoController {
         return new ResponseEntity<>(mensaje, HttpStatus.OK);
 	}
 	
-    private ReclamoDTO convertToDTO(Reclamo reclamo) {
-        return new ReclamoDTO(
-            reclamo.getUnidad(),
-            reclamo.getAreaComun(),
-            reclamo.getDescripcion(),
-            reclamo.getEdificio(),
-            reclamo.getEstado(),
-            reclamo.getFotos(),
-            reclamo.getFechaCreacion(),
-            reclamo.getFechaModificacion(),
-                reclamo.getId()
-        );
-    }
+	private ReclamoDTO convertToDTO(Reclamo reclamo) {
+	    int unidadId = reclamo.getUnidad() != null ? reclamo.getUnidad().getIdUnidad() : 0;
+	    int areaComunId = reclamo.getAreaComun() != null ? reclamo.getAreaComun().getIdAreaComun() : 0;
+	    int edificioId = reclamo.getEdificio() != null ? reclamo.getEdificio().getId() : 0;
+	    int usuarioId = reclamo.getUsuario() != null ? reclamo.getUsuario().getId() : 0;
+		System.out.println(reclamo);
+	    return new ReclamoDTO(
+		    reclamo.getId(),
+		    usuarioId,
+	        unidadId,
+	        areaComunId,
+	        reclamo.getDescripcion(),
+	        edificioId,
+	        reclamo.getEstado(),
+	        reclamo.getFotos(),
+	        reclamo.getFechaCreacion(),
+	        reclamo.getFechaModificacion()
+	    );
+	}
 
-    private Reclamo convertToEntity(ReclamoDTO reclamoDTO) {
-        Reclamo reclamo = new Reclamo(
-            reclamoDTO.getUnidad(),
-            reclamoDTO.getAreaComun(),
-            reclamoDTO.getDescripcion(),
-            reclamoDTO.getEdificio(),
-            reclamoDTO.getEstado(),
-            reclamoDTO.getFotos(),
-            reclamoDTO.getFechaCreacion(),
-            reclamoDTO.getFechaModificacion()
-        );
-        return reclamo;
-    }
+
+	private Reclamo convertToEntity(ReclamoDTO reclamoDTO) {
+	    Unidad unidad = unidadDAO.findById(reclamoDTO.getUnidad());
+	    AreaComun areaComun = areaComunDAO.findById(reclamoDTO.getAreaComun());
+	    Edificio edificio = edificioDAO.findById(reclamoDTO.getEdificio());
+	    Usuario usuario = usuarioDAO.findById(reclamoDTO.getUsuario());
+
+	    Reclamo reclamo = new Reclamo(
+	    	usuario,
+	        unidad,
+	        areaComun,
+	        reclamoDTO.getDescripcion(),
+	        edificio,
+	        reclamoDTO.getEstado(),
+	        reclamoDTO.getFotos(),
+	        reclamoDTO.getFechaCreacion(),
+	        reclamoDTO.getFechaModificacion()
+	    );
+	    return reclamo;
+	}
+
 
     private List<ReclamoDTO> convertToDTOs(List<Reclamo> reclamos) {
         List<ReclamoDTO> reclamoDTOs = new ArrayList<>();

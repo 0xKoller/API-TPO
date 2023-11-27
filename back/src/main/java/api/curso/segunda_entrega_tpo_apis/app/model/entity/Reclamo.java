@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,15 +24,22 @@ public class Reclamo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-//    private int usuario;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "usuario")
+    @JsonBackReference("usuario-reclamo")
+    private Usuario usuario;
+    @ManyToOne
     @JoinColumn(name = "unidad")
+    @JsonBackReference("unidad-reclamo")
     private Unidad unidad;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "areaComun")
+    @JsonBackReference("areaComun-reclamo")
     private AreaComun areaComun;
     private String descripcion;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "edificio")
+    @JsonBackReference("edificio-reclamo")
     private Edificio edificio;
     private EstadoReclamo estado;
     @OneToMany(mappedBy = "reclamo", cascade = CascadeType.ALL)
@@ -42,13 +51,11 @@ public class Reclamo {
     public Reclamo() {
         super();
     }
-    
-    
 
-	public Reclamo( Unidad unidad, AreaComun areaComun, String descripcion, Edificio edificio,
+	public Reclamo(Usuario usuario, Unidad unidad, AreaComun areaComun, String descripcion, Edificio edificio,
 			EstadoReclamo estado, List<Imagen> fotos, Date fechaCreacion, Date fechaModificacion) {
 		super();
-//		this.usuario = usuario;
+		this.usuario = usuario;
 		this.unidad = unidad;
 		this.areaComun = areaComun;
 		this.descripcion = descripcion;
@@ -59,8 +66,6 @@ public class Reclamo {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-
-
 	public int getId() {
 		return id;
 	}
@@ -69,19 +74,13 @@ public class Reclamo {
 		this.id = id;
 	}
 
-	
-	
-//	public int getUsuario() {
-//		return usuario;
-//	}
+	public Usuario getUsuario() {
+		return usuario;
+	}
 
-
-//
-//	public void setUsuario(int usuario) {
-//		this.usuario = usuario;
-//	}
-
-
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
 	public Unidad getUnidad() {
 		return unidad;
@@ -147,14 +146,18 @@ public class Reclamo {
 		this.fechaModificacion = fechaModificacion;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "Reclamo [id=" + id + ", unidad=" + unidad + ", areaComun=" + areaComun
-				+ ", descripcion=" + descripcion + ", edificio=" + edificio + ", estado=" + estado + ", fotos=" + fotos
-				+ ", fechaCreacion=" + fechaCreacion + ", fechaModificacion=" + fechaModificacion + "]";
+		return "Reclamo [id=" + id +
+				", usuarioId=" + (usuario != null ? usuario.getId() : "null") +
+				", unidadId=" + (unidad != null ? unidad.getIdUnidad() : "null") +
+				", areaComunId=" + (areaComun != null ? areaComun.getIdAreaComun() : "null") +
+				", descripcion=" + descripcion +
+				", edificioId=" + (edificio != null ? edificio.getId() : "null") +
+				", estado=" + estado +
+				", fotos=" + (fotos != null ? "Fotos presentes" : "No fotos") +
+				", fechaCreacion=" + fechaCreacion +
+				", fechaModificacion=" + fechaModificacion + "]";
 	}
-
 	
 }

@@ -31,8 +31,7 @@ public class ImagenController {
 
     @PostMapping("/subir")
     public ResponseEntity<String> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("reclamoId") int reclamoId) {
-        System.out.println(archivo);
-        System.out.println(reclamoId);
+
         try {
             Reclamo reclamo = reclamoService.findById(reclamoId);
             if (reclamo != null) {

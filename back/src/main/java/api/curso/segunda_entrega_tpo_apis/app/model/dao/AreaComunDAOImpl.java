@@ -1,5 +1,6 @@
 package api.curso.segunda_entrega_tpo_apis.app.model.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.AreaComun;
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.Edificio;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -28,6 +30,18 @@ public class AreaComunDAOImpl implements IAreaComunDAO {
 		List<AreaComun> areasComuness = getQuery.getResultList();
 		
 		return areasComuness;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<AreaComun> findByIds(List<Integer> ids) {
+	    if (ids == null || ids.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+	    Session currentSession = entityManager.unwrap(Session.class);
+	    Query<AreaComun> query = currentSession.createQuery("from Area_comun where id in (:ids)", AreaComun.class);
+	    query.setParameter("ids", ids);
+	    return query.getResultList();
 	}
 
 	@Override

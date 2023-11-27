@@ -1,5 +1,6 @@
 package api.curso.segunda_entrega_tpo_apis.app.model.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -7,6 +8,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import api.curso.segunda_entrega_tpo_apis.app.model.entity.Edificio;
 import api.curso.segunda_entrega_tpo_apis.app.model.entity.Reclamo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,6 +28,18 @@ public class ReclamoDAOImpl implements IReclamoDAO {
 		List<Reclamo> reclamos = getQuery.getResultList();
 		
 		return reclamos;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Reclamo> findByIds(List<Integer> ids) {
+	    if (ids == null || ids.isEmpty()) {
+	        return Collections.emptyList();
+	    }
+	    Session currentSession = entityManager.unwrap(Session.class);
+	    Query<Reclamo> query = currentSession.createQuery("from Reclamo where id in (:ids)", Reclamo.class);
+	    query.setParameter("ids", ids);
+	    return query.getResultList();
 	}
 
 	@Override

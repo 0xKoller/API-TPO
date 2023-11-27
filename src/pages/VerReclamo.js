@@ -15,19 +15,18 @@ export default function VerReclamo () {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const userRoleContext = useContext(UserRoleContext);
-    console.log(userRoleContext)
+    
     const bearer = useContext(UserBearer);
     useEffect(() => {
         axios.get(`http://localhost:8080/tpo_apis/reclamos/${nroReclamo}`, {
             headers: {
                 Authorization: `Bearer ${bearer}`
-            }
-        }
-        )
+            },
+            
+        })
         .then((response) => {return response.data})
         .then((d) => {
             setReclamo(d)
-            console.log(d)
         })
         .catch((e) => console.log(e))
         .finally(() => {
@@ -38,6 +37,51 @@ export default function VerReclamo () {
     function redirectToHome(){
         navigate(userRoleContext==="administrador"? "/reclamos": "/misReclamos");
     }
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        let form;
+        console.log(reclamo)
+        if(reclamo.unidad !== 0){
+
+            form = {
+                "id": reclamo.id,
+                "descripcion": reclamo.descripcion,
+                "estado": e.target.unidad.value,
+                "edificio": reclamo.edificio,
+                "unidad": reclamo.unidad ,
+                "areaComun": null,
+                "usuario": reclamo.usuario,
+                "fechaCreacion": reclamo.fechaCreacion,
+                "fechaModificacion": new Date()
+            }
+        }else{
+            form = {
+                "id": reclamo.id,
+                "descripcion": reclamo.descripcion,
+                "estado": e.target.unidad.value,
+                "edificio": reclamo.edificio,
+                "unidad": null,
+                "areaComun": reclamo.areaComun,
+                "usuario": reclamo.usuario,
+                "fechaCreacion": reclamo.fechaCreacion,
+                "fechaModificacion": new Date()
+            }
+        }
+        axios.put(`http://localhost:8080/tpo_apis/reclamos/${reclamo.id}`,
+            JSON.stringify(form), {
+                headers: {
+                    Authorization: `Bearer ${bearer}`,
+                     'Content-Type': 'application/json'
+                }
+            }
+        ).then((response) => {
+            console.log(response.data)
+    }).catch((e) => console.log(e))
+}
+
+   
+
 
     if (loading) {
         return (
@@ -51,13 +95,16 @@ export default function VerReclamo () {
     }
   
     else{ 
+        const options = ["ABIERTO", "EN_PROCESO", "DESESTIMADO", "ANULADO", "TERMINADO"]
         return (
         <>
             <NavigateBackButton ruta={userRoleContext === "empleado" ? "/reclamos": "/misReclamos"}/>
             <section className="card-father-container mt-4 mb-4">            
             <div className="card-content">
                 <h1 className="reclamo-titulo">Reclamo #{reclamo.id}</h1>
-                <Form>
+                <Form 
+                onSubmit={handleUpdate}
+                >
                     <Form.Group className="reclamo-form-group">
                         <Form.Label className="reclamo-form-group-label">Edificio:</Form.Label>
                         <Form.Label className="reclamo-form-group-label-answer">{reclamo.edificio}</Form.Label>
@@ -70,12 +117,25 @@ export default function VerReclamo () {
                         }                        
                     </Form.Group> */}
                     <Form.Group className="reclamo-form-group">
+                        <Form.Label className="reclamo-form-group-label">Imagen:</Form.Label>
+                         {reclamo.fotos && reclamo.fotos.map((foto, index) => (
+                    <img key={index} src={`data:image/jpeg;base64,${foto.datosImagen}`} alt={`Imagen del reclamo ${index}`} />
+                ))}
+                    </Form.Group>
+                    <Form.Group className="reclamo-form-group">
                         <Form.Label className="reclamo-form-group-label">Descripcion:</Form.Label>
                         <Form.Label className="reclamo-form-group-label-answer">{reclamo.descripcion}</Form.Label>
                     </Form.Group>
                     <Form.Group className="reclamo-form-group">
                         <Form.Label className="reclamo-form-group-label">Estado:</Form.Label>
-                        <Form.Label className="reclamo-form-group-label-answer">{reclamo.estado}</Form.Label>
+                        <Form.Select className="nuevoReclamo-form-group-input" name="unidad">
+                                <option value={reclamo.estado}>{reclamo.estado}</option>
+                                {options.map((option) => {
+                                    if(option !== reclamo.estado){
+                                        return <option key={option} value={option}>{option}</option>
+                                    }
+                                })}
+                                </Form.Select>
                     </Form.Group>
                     
                    
@@ -85,7 +145,7 @@ export default function VerReclamo () {
                         : reclamo.imagenes.map((imagen) => (<img className="reclamo-imagenes" key={imagen.direccion} src={imagen.direccion} alt=""></img>))}           
                     </Form.Group> */}
                     <div className="text-center mt-5 btns-div">
-                        <Button variant="primary" className="card-cancel-button">Modificar</Button>    
+                        <Button type='submit' variant="primary" className="card-cancel-button">Modificar</Button>    
                     </div>
                     <div className="text-center mt-5 btns-div">
                         <Button variant="primary" className="card-cancel-button" onClick={redirectToHome}>Volver atrás</Button>    

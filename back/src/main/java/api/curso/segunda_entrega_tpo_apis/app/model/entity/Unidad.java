@@ -1,7 +1,11 @@
 package api.curso.segunda_entrega_tpo_apis.app.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,109 +13,130 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Unidad")
 public class Unidad {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idUnidad;
-    private int piso;
-    private int nroUnidad;
-	 @Column(name = "estado", nullable = false, length = 50)
-     private EstadoUnidad estado;
-     @OneToOne
-     private Usuario duenio;
-     @OneToOne
-     private Usuario inquilino;
-     @ManyToOne
-     @JoinColumn(name = "edificio")
-     @JsonBackReference
-     private Edificio edificio;
+	private int piso;
+	private int nroUnidad;
+	@Column(name = "estado", nullable = false, length = 50)
+	private EstadoUnidad estado;
+	@OneToOne
+	private Usuario duenio;
+	@OneToOne
+	private Usuario inquilino;
+	@ManyToOne
+	@JoinColumn(name = "edificio")
+	@JsonBackReference("edificio-unidad")
+	private Edificio edificio;
+	@OneToMany(mappedBy = "unidad", cascade = CascadeType.ALL)
+	@JsonManagedReference("unidad-reclamo")
+	private List<Reclamo> reclamos;
 
+	public Unidad() {
+		super();
+	}
 
-    public Unidad() {
-        super();
-    }
+	public Unidad(int piso, int nroUnidad, EstadoUnidad estado, Usuario duenio, Usuario inquilino, Edificio edificio) {
+		super();
+		this.piso = piso;
+		this.nroUnidad = nroUnidad;
+		this.estado = estado;
+		this.duenio = duenio;
+		this.inquilino = inquilino;
+		this.edificio = edificio;
+	}
+	
+	
 
-    public Unidad(int piso, int nroUnidad, EstadoUnidad estado, Usuario duenio, Usuario inquilino, Edificio edificio) {
-        super();
-        this.piso = piso;
-        this.nroUnidad = nroUnidad;
-        this.estado = estado;
-        this.duenio = duenio;
-        this.inquilino = inquilino;
-        this.edificio = edificio;
-    }
+	public List<Reclamo> getReclamos() {
+		return reclamos;
+	}
 
-    public int getIdUnidad() {
-        return idUnidad;
-    }
+	public void setReclamos(List<Reclamo> reclamos) {
+		this.reclamos = reclamos;
+	}
 
-    public void setIdUnidad(int idUnidad) {
-        this.idUnidad = idUnidad;
-    }
+	public Unidad(int piso, int nroUnidad, EstadoUnidad estado, Usuario duenio, Usuario inquilino, Edificio edificio,
+			List<Reclamo> reclamos) {
+		super();
+		this.piso = piso;
+		this.nroUnidad = nroUnidad;
+		this.estado = estado;
+		this.duenio = duenio;
+		this.inquilino = inquilino;
+		this.edificio = edificio;
+		this.reclamos = reclamos;
+	}
 
-    public int getPiso() {
-        return piso;
-    }
+	public int getIdUnidad() {
+		return idUnidad;
+	}
 
-    public void setPiso(int piso) {
-        this.piso = piso;
-    }
+	public void setIdUnidad(int idUnidad) {
+		this.idUnidad = idUnidad;
+	}
 
-    public int getNroUnidad() {
-        return nroUnidad;
-    }
+	public int getPiso() {
+		return piso;
+	}
 
-    public void setNroUnidad(int nroUnidad) {
-        this.nroUnidad = nroUnidad;
-    }
+	public void setPiso(int piso) {
+		this.piso = piso;
+	}
 
-    public EstadoUnidad getEstado() {
-        return estado;
-    }
+	public int getNroUnidad() {
+		return nroUnidad;
+	}
 
-    public void setEstado(EstadoUnidad estado) {
-        this.estado = estado;
-    }
+	public void setNroUnidad(int nroUnidad) {
+		this.nroUnidad = nroUnidad;
+	}
 
-    public Usuario getDuenio() {
-        return duenio;
-    }
+	public EstadoUnidad getEstado() {
+		return estado;
+	}
 
-    public void setDuenio(Usuario duenio) {
-        this.duenio = duenio;
-    }
+	public void setEstado(EstadoUnidad estado) {
+		this.estado = estado;
+	}
 
-    public Usuario getInquilino() {
-        return inquilino;
-    }
+	public Usuario getDuenio() {
+		return duenio;
+	}
 
-    public void setInquilino(Usuario inquilino) {
-        this.inquilino = inquilino;
-    }
+	public void setDuenio(Usuario duenio) {
+		this.duenio = duenio;
+	}
 
-    public Edificio getEdificio() {
-        return edificio;
-    }
+	public Usuario getInquilino() {
+		return inquilino;
+	}
 
-    public void setEdificio(Edificio edificio) {
-        this.edificio = edificio;
-    }
+	public void setInquilino(Usuario inquilino) {
+		this.inquilino = inquilino;
+	}
 
-    @Override
-    public String toString() {
-        return "Unidad{" +
-                "idUnidad=" + idUnidad +
-                ", piso=" + piso +
-                ", nroUnidad=" + nroUnidad +
-                ", estado=" + estado +
-                ", duenio=" + duenio +
-                ", inquilino=" + inquilino +
-                ", edificio=" + edificio +
-                '}';
-    }
+	public Edificio getEdificio() {
+		return edificio;
+	}
+
+	public void setEdificio(Edificio edificio) {
+		this.edificio = edificio;
+	}
+
+	@Override
+	public String toString() {
+		return "Unidad [idUnidad=" + idUnidad + ", piso=" + piso + ", nroUnidad=" + nroUnidad + ", estado=" + estado
+				+ ", duenio=" + duenio + ", inquilino=" + inquilino + ", edificio=" + edificio + ", reclamos="
+				+ reclamos + "]";
+	}
+
+	
 }

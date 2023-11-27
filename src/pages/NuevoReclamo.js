@@ -90,8 +90,8 @@ if(esUnidad) {
         "unidad": Number(valor.split('-')[1]), // Obtiene el XXXX de "unidad-XXX"
         "areaComun": null,
         "descripcion": e.target.descripcion.value,
-        "edificio": e.target.edificio.value,
-        "estado": "ABIERTO",
+        "edificio": Number(e.target.edificio.value),
+        "estado": "NUEVO",
         "fotos": null,
         "fechaCreacion": date,
         "fechaModificacion": date
@@ -103,27 +103,15 @@ if(esUnidad) {
         "unidad": null,
         "areaComun": Number(valor.split('-')[1]), // Obtiene el XXXX de "comun-XXXX"
         "descripcion": e.target.descripcion.value,
-        "edificio": e.target.edificio.value,
-        "estado": "ABIERTO",
+        "edificio": Number(e.target.edificio.value),
+        "estado": "NUEVO",
         "fotos": null,
         "fechaCreacion": date,
         "fechaModificacion": date
     };
 }
 
-form = {
-    
-    "usuario":4,
-  "unidad": null,
-  "areaComun": null,
-  "descripcion": "Descripción de mi reclamo",
-  "edificio":null,
-  "estado": "ABIERTO",
-  "fotos": null,
-  "fechaCreacion": "2023-10-31T08:00:00",
-  "fechaModificacion": "2023-11-31T08:00:00"
-
-}
+console.log(form)
             axios.post("http://localhost:8080/tpo_apis/reclamos", JSON.stringify(form), 
                 {
                     headers: { 
@@ -186,12 +174,12 @@ form = {
                                 <option value="-1"></option>
                                 {role && (role === "inquilino" || role === "duenio")
                                 ? unidades.map((unidad) => 
-                                     <option key={unidad.idUnidad} value={`unidad-${unidad}`} name="unidad">Piso: {unidad.piso}, Unidad: {unidad.nroUnidad}</option>
+                                     <option key={unidad.idUnidad} value={`unidad-${unidad.idUnidad}`} name="unidad">Piso: {unidad.piso}, Unidad: {unidad.nroUnidad}</option>
                                     )
                                 : null
                                 }
                                 {areasComunes && areasComunes.length > 0 ? areasComunes.map((areaComun) =>
-                                        <option key={areaComun.idAreaComun} value={`comun-${areaComun}`} name="unidad">Nombre: {areaComun.nombre} - Piso: {areaComun.piso}</option>
+                                        <option key={areaComun.idAreaComun} value={`comun-${areaComun.idAreaComun}`} name="unidad">Nombre: {areaComun.nombre} - Piso: {areaComun.piso}</option>
                                          ) :null    
                             }
                             </Form.Select>

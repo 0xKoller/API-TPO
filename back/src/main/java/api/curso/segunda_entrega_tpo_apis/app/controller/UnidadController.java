@@ -107,7 +107,9 @@ public class UnidadController {
             unidad.getEstado(),
             unidad.getDuenio(),
             unidad.getInquilino(),
-            unidad.getEdificio()
+            unidad.getEdificio(),
+            unidad.getReclamos(),
+            unidad.getIdUnidad()
         );
     }
 
@@ -119,6 +121,7 @@ public class UnidadController {
         unidad.setDuenio(unidadDTO.getDuenio());
         unidad.setInquilino(unidadDTO.getInquilino());
         unidad.setEdificio(unidadDTO.getEdificio());
+        unidad.setReclamos(unidadDTO.getReclamos());
         return unidad;
     }
 
